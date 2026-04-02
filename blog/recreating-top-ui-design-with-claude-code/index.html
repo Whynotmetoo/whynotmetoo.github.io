@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Recreating Top-Tier UI Philosophy with Claude Code | Carson Ye</title><meta name="description" content="A workflow for translating visual taste into reusable engineering systems."><link rel="canonical" href="https://whynotmetoo.github.io/blog/recreating-top-ui-design-with-claude-code/"><link rel="icon" type="image/svg+xml" href="/favicon/favicon-light.svg" data-site-favicon><link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"><link rel="manifest" href="/favicon/site.webmanifest"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website"><meta property="og:site_name" content="Carson Ye"><meta property="og:title" content="Recreating Top-Tier UI Philosophy with Claude Code | Carson Ye"><meta property="og:description" content="A workflow for translating visual taste into reusable engineering systems."><meta property="og:url" content="https://whynotmetoo.github.io/blog/recreating-top-ui-design-with-claude-code/"><meta property="og:image" content="https://images.unsplash.com/photo-1672385277648-85eddc237a2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Recreating Top-Tier UI Philosophy with Claude Code | Carson Ye"><meta name="twitter:description" content="A workflow for translating visual taste into reusable engineering systems."><meta name="twitter:image" content="https://images.unsplash.com/photo-1672385277648-85eddc237a2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200"><link rel="alternate" type="application/rss+xml" title="Carson Ye RSS" href="/rss.xml"><script data-goatcounter="https://carsonye.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>
+      (() => {
+        const storageKey = 'theme';
+        const root = document.documentElement;
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const favicon = document.querySelector('[data-site-favicon]');
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const faviconHref = {
+          light: '/favicon/favicon-light.svg',
+          dark: '/favicon/favicon-dark.svg',
+        };
+        const themeColorValue = {
+          light: '#ffffff',
+          dark: '#0f172a',
+        };
+
+        const readStoredTheme = () => {
+          try {
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'light' || saved === 'dark' || saved === 'system') {
+              return saved;
+            }
+          } catch {}
+
+          return 'system';
+        };
+
+        const persistTheme = (mode) => {
+          try {
+            localStorage.setItem(storageKey, mode);
+          } catch {}
+        };
+
+        const resolveTheme = (mode) => (
+          mode === 'dark' || (mode === 'system' && media.matches) ? 'dark' : 'light'
+        );
+
+        const applyTheme = (mode, persist = true) => {
+          const nextMode = mode === 'light' || mode === 'dark' || mode === 'system' ? mode : 'system';
+          const resolvedTheme = resolveTheme(nextMode);
+
+          root.classList.toggle('dark', resolvedTheme === 'dark');
+          root.dataset.themeMode = nextMode;
+          root.dataset.themeResolved = resolvedTheme;
+
+          if (favicon instanceof HTMLLinkElement) {
+            favicon.href = faviconHref[resolvedTheme];
+          }
+
+          if (themeColor instanceof HTMLMetaElement) {
+            themeColor.content = themeColorValue[resolvedTheme];
+          }
+
+          if (persist) {
+            persistTheme(nextMode);
+          }
+
+          return nextMode;
+        };
+
+        const cycleTheme = () => {
+          const current = root.dataset.themeMode || 'system';
+          if (current === 'light') return 'dark';
+          if (current === 'dark') return 'system';
+          return 'light';
+        };
+
+        window.themeController = {
+          applyTheme,
+          cycleTheme,
+          getThemeMode: () => root.dataset.themeMode || readStoredTheme(),
+          media,
+        };
+
+        applyTheme(readStoredTheme(), false);
+      })();
+    </script><link rel="stylesheet" href="/_astro/about-me.Ch25bXO-.css"></head> <body> <header class="site-header"> <div class="site-shell site-header-row"> <a class="site-brand" href="/">Carson Ye</a> <nav class="site-nav" aria-label="Primary"> <ul> <li><a href="/">Home</a></li><li><a href="/blog">Blog</a></li><li><a href="/topics">Topics</a></li><li><a href="/about-me">About</a></li> </ul> </nav> <div class="site-header-actions"> <a href="/blog" class="icon-link" aria-label="Search articles"> <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> <button type="button" class="icon-link" data-theme-toggle aria-label="Toggle theme"> <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle> <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> <svg class="theme-icon theme-icon-system" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"></rect> <path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> <button type="button" class="icon-link mobile-nav-btn" data-mobile-toggle aria-expanded="false" aria-label="Toggle menu"> <svg class="mobile-icon-menu" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="mobile-icon-close" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> </div> </div> <nav class="mobile-nav site-shell" data-mobile-nav hidden aria-label="Mobile"> <ul> <li><a href="/">Home</a></li><li><a href="/blog">Blog</a></li><li><a href="/topics">Topics</a></li><li><a href="/about-me">About</a></li> </ul> </nav> </header> <main class="site-main site-shell">  <article class="blog-post"> <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/blog">Blog</a></li><li><span aria-current="page">Recreating Top-Tier UI Philosophy with Claude Code</span></li></ol></nav> <header> <h1>Recreating Top-Tier UI Philosophy with Claude Code</h1> <p class="meta">Published March 20, 2026</p>  <ul class="tag-list" aria-label="Tags"> <li><a href="/tags/ui/">#ui</a></li><li><a href="/tags/ai/">#ai</a></li><li><a href="/tags/design/">#design</a></li><li><a href="/tags/claude-code/">#claude-code</a></li> </ul> </header> <p>In the early days of AI-assisted UI work, the common workflow was deceptively simple: take a screenshot of a beautiful interface, paste it into Claude Code or Codex, and ask it to imitate or recreate the design.</p>
+<p>The output often looked convincing at first glance. The layout was close, the colors were similar, and the components seemed familiar.</p>
+<p>But something was always missing.</p>
+<p>The spacing was technically correct, yet lacked rhythm.<br>
+The typography hierarchy existed, but not the intended emphasis.<br>
+The visual balance was there, but the product’s design philosophy was gone.</p>
+<p>What AI reproduced was the <strong>surface</strong>, not the <strong>system behind the surface</strong>.</p>
+<p>A better workflow is to reverse engineer the interface the same way we would study a great codebase: extract the styling foundation, validate the visual language in a design playground, distill reusable design tokens, and only then let AI generate within that system.</p>
+<p>This shifts the process from imitation to design understanding.</p>
+<hr>
+<h2 id="1-extract-the-styling-foundation">1. Extract the Styling Foundation</h2>
+<p>The first step is to capture the <strong>computed style</strong> from the root layer of the page.</p>
+<p>This is usually where the global design language lives: typography, theme colors, spacing primitives, and base tokens.</p>
+<p>The following script helps export those styles:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> el</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> document.documentElement;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> styles</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> getComputedStyle</span><span style="color:#E1E4E8">(el);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">let</span><span style="color:#E1E4E8"> css </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> ''</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">let</span><span style="color:#E1E4E8"> prop </span><span style="color:#F97583">of</span><span style="color:#E1E4E8"> styles) {</span></span>
+<span class="line"><span style="color:#E1E4E8">  css </span><span style="color:#F97583">+=</span><span style="color:#9ECBFF"> `${</span><span style="color:#E1E4E8">prop</span><span style="color:#9ECBFF">}: ${</span><span style="color:#E1E4E8">styles</span><span style="color:#9ECBFF">.</span><span style="color:#B392F0">getPropertyValue</span><span style="color:#9ECBFF">(</span><span style="color:#E1E4E8">prop</span><span style="color:#9ECBFF">)</span><span style="color:#9ECBFF">};</span><span style="color:#79B8FF">\n</span><span style="color:#9ECBFF">`</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">copy</span><span style="color:#E1E4E8">(css);</span></span></code></pre>
+<p>This gives us a clean snapshot of the page’s global styling foundation.</p>
+<p>The important mindset here is not blind extraction, but treating the output as <strong>design evidence</strong>.</p>
+<p>We are not collecting CSS for duplication.<br>
+We are collecting clues about the visual system.</p>
+<hr>
+<h2 id="2-convert-raw-css-into-a-design-playground">2. Convert Raw CSS into a Design Playground</h2>
+<p>Raw CSS is too implementation-heavy for meaningful design reasoning.</p>
+<p>Instead of directly asking Claude Code to generate production-ready components, the better workflow is to first convert the extracted styling data into a <strong>single-file UI design playground</strong>.</p>
+<p>This playground acts as a visual sandbox where the reconstructed interface can be reviewed, adjusted, and stress-tested before abstraction.</p>
+<p>At this stage, the goal is not perfection.<br>
+It is <strong>visual validation</strong>.</p>
+<p>This extra step is extremely valuable because it gives you a chance to:</p>
+<ul>
+<li>verify typography rhythm</li>
+<li>inspect spacing cadence</li>
+<li>evaluate component balance</li>
+<li>test layout density</li>
+<li>refine interaction feel</li>
+<li>identify inconsistencies before tokenization</li>
+</ul>
+<p>A useful prompt here is:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="md"><code><span class="line"><span style="color:#E1E4E8">Based on the extracted CSS foundation and visual references, generate a single-file UI design playground that recreates the interface style as faithfully as possible.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">The output should prioritize visual coherence over production architecture.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">Include representative sections such as:</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> hero area</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> content cards</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> navigation</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> buttons</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> forms</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> modal/dialog</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> list and detail views</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">The purpose of this playground is visual review and iterative refinement before extracting design tokens.</span></span></code></pre>
+<p>This is the stage where design taste becomes transferable.</p>
+<hr>
+<h2 id="3-distill-design-tokens-and-build-the-design-system">3. Distill Design Tokens and Build the Design System</h2>
+<p>Once the design playground feels visually stable, the next step is to extract <strong>design tokens</strong>.</p>
+<p>This is where the workflow becomes truly reusable.</p>
+<p>Colors stop being random hex values and become semantic tokens:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>--color-primary</span></span>
+<span class="line"><span>--color-surface</span></span>
+<span class="line"><span>--color-muted</span></span>
+<span class="line"><span>--color-accent</span></span></code></pre>
+<p>Spacing stops being arbitrary pixel values and becomes a scale:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>--space-2</span></span>
+<span class="line"><span>--space-4</span></span>
+<span class="line"><span>--space-8</span></span>
+<span class="line"><span>--space-16</span></span>
+<span class="line"><span>--space-24</span></span></code></pre>
+<p>Typography stops being isolated declarations and becomes a hierarchy system:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>--font-heading</span></span>
+<span class="line"><span>--font-body</span></span>
+<span class="line"><span>--font-caption</span></span></code></pre>
+<p>This is the transition from copied style to <strong>systemized visual language</strong>.</p>
+<p>The final goal is not imitation.</p>
+<p>It is to transform observed design taste into a reusable <strong>design system</strong> that can generate consistent interfaces across pages, products, and future experiments.</p>
+<p>Instead of asking for “similar UI”, ask Claude Code to document the visual system as if it were an internal design engineering reference.</p>
+<p>A refined prompt looks like this:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="md"><code><span class="line"><span style="color:#E1E4E8">Analyze the provided project styles and generate a comprehensive </span><span style="color:#79B8FF">`style-guide.md`</span><span style="color:#E1E4E8"> that documents the visual system behind the interface.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">The document should read like an internal design engineering reference, focusing on reusable styling logic rather than isolated CSS snippets.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">Include:</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> overall visual philosophy</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> color system</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> typography hierarchy</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> spacing rhythm</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> component language</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> shadows and elevation</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> motion and transitions</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> shape language</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> transparency and layering</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> utility patterns</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> representative component examples</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">Focus on the reasoning behind the visual decisions.</span></span>
+<span class="line"><span style="color:#E1E4E8">Preserve project-specific nuance.</span></span>
+<span class="line"><span style="color:#E1E4E8">Avoid generic descriptions.</span></span></code></pre>
+<p>This small change moves the AI from <strong>replication</strong> to <strong>abstraction</strong>.</p>
+<p>And abstraction is where great design systems begin.</p>
+<p>Once the tokens are stable, Claude Code becomes dramatically more useful when generating new product surfaces within the same visual language.</p>
+<hr>
+<h2 id="4-build-new-interfaces-with-the-design-system">4. Build New Interfaces with the Design System</h2>
+<p>At this point, you are no longer asking it to “copy this UI”.</p>
+<p>Instead, you are asking it to <strong>build with the same design system</strong>.</p>
+<p>Provide Claude Code with:</p>
+<ul>
+<li>the design guide</li>
+<li>representative playground screenshots</li>
+<li>component references</li>
+<li>page-level product requirements</li>
+</ul>
+<p>Now the generation process changes fundamentally.</p>
+<p>The result is no longer a shallow clone.</p>
+<p>It becomes a faithful continuation of the original design philosophy.</p>
+<p>That is the real difference between copying pixels and learning taste.</p>
+<hr>
+<h2 id="closing-thought">Closing Thought</h2>
+<p>What makes a world-class UI feel premium is rarely the colors or the rounded corners alone.</p>
+<p>It is the consistency of hierarchy, spacing, motion, and component behavior across the entire product.</p>
+<p>AI is excellent at generation, but generation without structure produces imitation.</p>
+<p>Generation guided by systems produces philosophy.</p>
+<p>The workflow is simple:</p>
+<blockquote>
+<p>screenshot → extracted styles → design playground → design tokens → design system → production UI</p>
+</blockquote>
+<p>Once you internalize this pipeline, Claude Code stops being a UI copying tool.</p>
+<p>It becomes a collaborator for translating <strong>visual taste</strong> into reusable engineering systems.</p> </article> <section aria-label="Comments" class="comments"> <h2>Comments</h2> <script src="https://giscus.app/client.js" data-repo="Whynotmetoo/whynotmetoo.github.io" data-repo-id="R_kgDOROUm4Q" data-category="Announcements" data-category-id="DIC_kwDOROUm4c4C2Qoo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async></script> </section>  </main> <footer class="site-footer" id="about"> <div class="site-shell site-footer-grid"> <section class="site-footer-brand"> <a class="site-brand" href="/">Carson Ye</a> <p> Passionate software engineer with 5+ years of experience building scalable web applications. I enjoy sharing practical engineering lessons from building real products.
+</p> <ul class="site-footer-socials"> <li> <a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer" aria-label="GitHub"> <svg viewBox="0 0 24 24" fill="none"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="https://linkedin.com/in/chongquan" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"> <svg viewBox="0 0 24 24" fill="none"> <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6ZM2 9h4v12H2Zm2-7a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="mailto:hi@carsonye.com" aria-label="Email"> <svg viewBox="0 0 24 24" fill="none"> <path d="M4 6h16v12H4zM4 6l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> </ul> </section> <section> <h2>Navigate</h2> <ul class="site-footer-links"> <li><a href="/">Home</a></li><li><a href="/blog">Blog</a></li><li><a href="/topics">Topics</a></li><li><a href="/about-me">About</a></li> </ul> </section> <section> <h2>Connect</h2> <ul class="site-footer-links"> <li><a href="mailto:hi@carsonye.com">Contact</a></li> <li><a href="/about-me">Resume</a></li> <li><a href="https://linkedin.com/in/chongquan" target="_blank" rel="noopener noreferrer">LinkedIn</a></li> <li><a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer">GitHub</a></li> </ul> </section> </div> <div class="site-shell site-footer-bottom"> <p>© 2026 Carson(Chongquan) Ye. Built with passion and curiosity.</p> </div> </footer> <script>
+      (() => {
+        const toggle = document.querySelector('[data-theme-toggle]');
+        const menuToggle = document.querySelector('[data-mobile-toggle]');
+        const mobileNav = document.querySelector('[data-mobile-nav]');
+        const themeController = window.themeController;
+        const syncSystemTheme = () => {
+          if (themeController?.getThemeMode() === 'system') {
+            themeController.applyTheme('system', false);
+          }
+        };
+
+        themeController?.media.addEventListener?.('change', syncSystemTheme);
+        themeController?.media.addListener?.(syncSystemTheme);
+
+        toggle?.addEventListener('click', () => {
+          if (!themeController) return;
+          themeController.applyTheme(themeController.cycleTheme());
+        });
+
+        menuToggle?.addEventListener('click', () => {
+          if (!mobileNav || !(menuToggle instanceof HTMLButtonElement)) return;
+          const hidden = mobileNav.hasAttribute('hidden');
+          if (hidden) {
+            mobileNav.removeAttribute('hidden');
+            menuToggle.setAttribute('aria-expanded', 'true');
+          } else {
+            mobileNav.setAttribute('hidden', '');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      })();
+    </script> </body> </html>
