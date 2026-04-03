@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://carsonye.com/sitemap-index.xml
