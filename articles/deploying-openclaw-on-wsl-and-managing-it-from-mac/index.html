@@ -1,0 +1,308 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet"><title>Deploying OpenClaw on Windows WSL and Managing It from macOS | Carson Ye</title><meta name="description" content="A practical setup for running OpenClaw inside WSL on a spare Windows machine and controlling it from macOS."><link rel="canonical" href="https://whynotmetoo.github.io/articles/deploying-openclaw-on-wsl-and-managing-it-from-mac/"><link rel="icon" type="image/svg+xml" href="/favicon/favicon-light.svg" data-site-favicon><link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"><link rel="manifest" href="/favicon/site.webmanifest"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website"><meta property="og:site_name" content="Carson Ye"><meta property="og:title" content="Deploying OpenClaw on Windows WSL and Managing It from macOS | Carson Ye"><meta property="og:description" content="A practical setup for running OpenClaw inside WSL on a spare Windows machine and controlling it from macOS."><meta property="og:url" content="https://whynotmetoo.github.io/articles/deploying-openclaw-on-wsl-and-managing-it-from-mac/"><meta property="og:image" content="https://whynotmetoo.github.io/og-default.svg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Deploying OpenClaw on Windows WSL and Managing It from macOS | Carson Ye"><meta name="twitter:description" content="A practical setup for running OpenClaw inside WSL on a spare Windows machine and controlling it from macOS."><meta name="twitter:image" content="https://whynotmetoo.github.io/og-default.svg"><link rel="alternate" type="application/rss+xml" title="Carson Ye RSS" href="/rss.xml"><script data-goatcounter="https://carsonye.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>
+      (() => {
+        const storageKey = 'theme';
+        const root = document.documentElement;
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const favicon = document.querySelector('[data-site-favicon]');
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const faviconHref = {
+          light: '/favicon/favicon-light.svg',
+          dark: '/favicon/favicon-dark.svg',
+        };
+        const themeColorValue = {
+          light: '#ffffff',
+          dark: '#0f172a',
+        };
+
+        const readStoredTheme = () => {
+          try {
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'light' || saved === 'dark' || saved === 'system') {
+              return saved;
+            }
+          } catch {}
+
+          return 'system';
+        };
+
+        const persistTheme = (mode) => {
+          try {
+            localStorage.setItem(storageKey, mode);
+          } catch {}
+        };
+
+        const resolveTheme = (mode) => (
+          mode === 'dark' || (mode === 'system' && media.matches) ? 'dark' : 'light'
+        );
+
+        const applyTheme = (mode, persist = true) => {
+          const nextMode = mode === 'light' || mode === 'dark' || mode === 'system' ? mode : 'system';
+          const resolvedTheme = resolveTheme(nextMode);
+
+          root.classList.toggle('dark', resolvedTheme === 'dark');
+          root.dataset.themeMode = nextMode;
+          root.dataset.themeResolved = resolvedTheme;
+
+          if (favicon instanceof HTMLLinkElement) {
+            favicon.href = faviconHref[resolvedTheme];
+          }
+
+          if (themeColor instanceof HTMLMetaElement) {
+            themeColor.content = themeColorValue[resolvedTheme];
+          }
+
+          if (persist) {
+            persistTheme(nextMode);
+          }
+
+          return nextMode;
+        };
+
+        const cycleTheme = () => {
+          const current = root.dataset.themeMode || 'system';
+          if (current === 'light') return 'dark';
+          if (current === 'dark') return 'system';
+          return 'light';
+        };
+
+        window.themeController = {
+          applyTheme,
+          cycleTheme,
+          getThemeMode: () => root.dataset.themeMode || readStoredTheme(),
+          media,
+        };
+
+        applyTheme(readStoredTheme(), false);
+      })();
+    </script><link rel="stylesheet" href="/_astro/about-me.yOhzm7Uh.css"></head> <body> <header class="site-header"> <div class="site-shell site-header-row"> <a class="site-brand" href="/">Carson Ye</a> <nav class="site-nav" aria-label="Primary"> <ul> <li><a href="/">Home</a></li><li><a href="/articles">Articles</a></li><li><a href="/topics">Topics</a></li><li><a href="/about-me">About</a></li> </ul> </nav> <div class="site-header-actions"> <a href="/articles" class="icon-link" aria-label="Browse articles"> <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> <button type="button" class="icon-link" data-theme-toggle aria-label="Toggle theme"> <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle> <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> <svg class="theme-icon theme-icon-system" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"></rect> <path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> <button type="button" class="icon-link mobile-nav-btn" data-mobile-toggle aria-expanded="false" aria-label="Toggle menu"> <svg class="mobile-icon-menu" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="mobile-icon-close" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> </div> </div> <nav class="mobile-nav site-shell" data-mobile-nav hidden aria-label="Mobile"> <ul> <li><a href="/">Home</a></li><li><a href="/articles">Articles</a></li><li><a href="/topics">Topics</a></li><li><a href="/about-me">About</a></li> </ul> </nav> </header> <main class="site-main site-shell">  <div class="article-page-shell"> <aside class="article-outline" aria-label="Article outline"> <div class="article-outline-inner"> <p class="article-outline-title">Outline</p> <ol class="article-outline-list"> <li> <a href="#why-this-setup" class="article-outline-link" style="--outline-depth:0;" title="Why This Setup"> Why This Setup </a> </li><li> <a href="#architecture-overview" class="article-outline-link" style="--outline-depth:0;" title="Architecture Overview"> Architecture Overview </a> </li><li> <a href="#installing-chrome-inside-wsl" class="article-outline-link" style="--outline-depth:0;" title="Installing Chrome Inside WSL"> Installing Chrome Inside WSL </a> </li><li> <a href="#install-chrome" class="article-outline-link" style="--outline-depth:1;" title="Install Chrome"> Install Chrome </a> </li><li> <a href="#verify-the-installation" class="article-outline-link" style="--outline-depth:1;" title="Verify the Installation"> Verify the Installation </a> </li><li> <a href="#configure-the-browser-service" class="article-outline-link" style="--outline-depth:1;" title="Configure the Browser Service"> Configure the Browser Service </a> </li><li> <a href="#enabling-ssh-access-from-macos-to-wsl" class="article-outline-link" style="--outline-depth:0;" title="Enabling SSH Access from macOS to WSL"> Enabling SSH Access from macOS to WSL </a> </li><li> <a href="#generate-a-key-pair-on-macos" class="article-outline-link" style="--outline-depth:1;" title="Generate a Key Pair on macOS"> Generate a Key Pair on macOS </a> </li><li> <a href="#copy-the-public-key-into-wsl" class="article-outline-link" style="--outline-depth:1;" title="Copy the Public Key into WSL"> Copy the Public Key into WSL </a> </li><li> <a href="#install-the-ssh-server-in-wsl" class="article-outline-link" style="--outline-depth:1;" title="Install the SSH Server in WSL"> Install the SSH Server in WSL </a> </li><li> <a href="#configure-sshd" class="article-outline-link" style="--outline-depth:1;" title="Configure sshd"> Configure sshd </a> </li><li> <a href="#solving-the-wsl-networking-problem" class="article-outline-link" style="--outline-depth:0;" title="Solving the WSL Networking Problem"> Solving the WSL Networking Problem </a> </li><li> <a href="#connecting-from-macos" class="article-outline-link" style="--outline-depth:0;" title="Connecting from macOS"> Connecting from macOS </a> </li><li> <a href="#remote-dashboard-access-with-local-port-forwarding" class="article-outline-link" style="--outline-depth:0;" title="Remote Dashboard Access with Local Port Forwarding"> Remote Dashboard Access with Local Port Forwarding </a> </li><li> <a href="#install-the-macos-companion-app-and-connect-it" class="article-outline-link" style="--outline-depth:0;" title="Install the macOS Companion App and Connect It"> Install the macOS Companion App and Connect It </a> </li><li> <a href="#another-useful-management-tool" class="article-outline-link" style="--outline-depth:0;" title="Another Useful Management Tool"> Another Useful Management Tool </a> </li><li> <a href="#final-thoughts" class="article-outline-link" style="--outline-depth:0;" title="Final Thoughts"> Final Thoughts </a> </li> </ol> </div> </aside> <div class="article-main"> <article class="article-page"> <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/articles">Articles</a></li><li><span aria-current="page">Deploying OpenClaw on Windows WSL and Managing It from macOS</span></li></ol></nav> <header> <h1>Deploying OpenClaw on Windows WSL and Managing It from macOS</h1> <p class="meta">Published March 25, 2026</p>  <ul class="tag-list" aria-label="Tags"> <li><a href="/tags/openclaw/">#openclaw</a></li><li><a href="/tags/agent/">#agent</a></li><li><a href="/tags/ai/">#ai</a></li> </ul> </header> <div class="article-body"> <p>Most people run OpenClaw directly on their primary computer. Others move it to a cloud VPS and pay a small monthly cost. There is a third option that is often cheaper and more practical: run it on an old Windows laptop you already own.
+Recently, I moved my OpenClaw runtime off my primary MacBook and onto a spare Windows machine running WSL Linux. The goal was not just to “make it run somewhere else”, but to build a cleaner remote workflow:</p>
+<ul>
+<li>let the Windows machine stay always on</li>
+<li>keep long-running agent tasks off my daily laptop</li>
+<li>use the Mac as the control surface for monitoring and management</li>
+</ul>
+<p>After several rounds of debugging SSH, port forwarding, browser services, and WSL networking, the setup became stable enough for real use.
+This article is a complete write-up of the architecture, setup process, and the non-obvious issues I ran into.</p>
+<h2 id="why-this-setup">Why This Setup</h2>
+<p>The biggest motivation was <strong>workflow separation</strong>.</p>
+<p>My MacBook is where I write, design, and think. It is my primary environment, and I prefer keeping it responsive and uncluttered.</p>
+<p>Long-running AI agents are different. They benefit from:</p>
+<ul>
+<li>persistent uptime</li>
+<li>isolated resources</li>
+<li>background execution</li>
+<li>freedom from daily laptop sleep cycles</li>
+</ul>
+<p>A spare Windows machine sitting in the corner of the house is perfect for that.</p>
+<p>Running OpenClaw inside WSL gives me a proper Linux runtime, while macOS becomes the remote terminal and dashboard viewer.</p>
+<p>This split-machine setup feels much closer to having a personal always-on compute box.</p>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<p>The final topology looks like this:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Mac</span></span>
+<span class="line"><span> ├─ SSH access</span></span>
+<span class="line"><span> ├─ Dashboard + monitoring</span></span>
+<span class="line"><span> ├─ Local port forwarding</span></span>
+<span class="line"><span> └─ Companion App (exposes macOS capabilities to the agent)</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Windows Host</span></span>
+<span class="line"><span> ├─ WSL-to-host port forwarding</span></span>
+<span class="line"><span> └─ WSL Linux</span></span>
+<span class="line"><span>      ├─ OpenClaw gateway</span></span>
+<span class="line"><span>      ├─ SSH server</span></span>
+<span class="line"><span>      └─ Headless Chrome</span></span></code></pre>
+<p>The key idea is simple:</p>
+<ul>
+<li><strong>Windows</strong> handles host-level networking</li>
+<li><strong>WSL Linux</strong> runs OpenClaw</li>
+<li><strong>Mac</strong> connects through SSH and local forwarding, and acts as the control surface</li>
+</ul>
+<p>This gives remote access without exposing services broadly across the local network.</p>
+<hr>
+<h2 id="installing-chrome-inside-wsl">Installing Chrome Inside WSL</h2>
+<p>First, configure WSL on Windows and install OpenClaw inside WSL by following the official documentation. I also connected a Telegram bot to the agent so I can still interact with it when I am away from my desk and only have my phone.</p>
+<p>To enable browser-side capabilities, OpenClaw needs a working Chrome binary inside Linux.</p>
+<h3 id="install-chrome">Install Chrome</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -y</span><span style="color:#9ECBFF"> wget</span><span style="color:#9ECBFF"> gnupg</span><span style="color:#9ECBFF"> ca-certificates</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">wget</span><span style="color:#9ECBFF"> https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> dpkg</span><span style="color:#79B8FF"> -i</span><span style="color:#9ECBFF"> google-chrome-stable_current_amd64.deb</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#79B8FF"> --fix-broken</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -y</span></span></code></pre>
+<h3 id="verify-the-installation">Verify the Installation</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#79B8FF">which</span><span style="color:#9ECBFF"> google-chrome</span></span>
+<span class="line"><span style="color:#B392F0">google-chrome</span><span style="color:#79B8FF"> --version</span></span></code></pre>
+<p>If both commands succeed, Chrome is ready for OpenClaw’s browser layer.</p>
+<h3 id="configure-the-browser-service">Configure the Browser Service</h3>
+<p>Add a browser section in <code>openclaw.json</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "browser"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "enabled"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "executablePath"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"/usr/bin/google-chrome"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "headless"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "noSandbox"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>In WSL, <code>headless</code> and <code>noSandbox</code> are typically required for reliable startup.
+Also make sure the tool profile is set to full, otherwise the browser tool may not be available to the agent:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "profile"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"full"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>Then start and verify the browser service:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">openclaw</span><span style="color:#9ECBFF"> browser</span><span style="color:#9ECBFF"> start</span><span style="color:#79B8FF"> --browser-profile</span><span style="color:#9ECBFF"> openclaw</span></span>
+<span class="line"><span style="color:#B392F0">openclaw</span><span style="color:#9ECBFF"> browser</span><span style="color:#9ECBFF"> status</span></span></code></pre>
+<p>If the status command returns healthy output, the browser endpoint is live.</p>
+<hr>
+<h2 id="enabling-ssh-access-from-macos-to-wsl">Enabling SSH Access from macOS to WSL</h2>
+<p>This is the foundation of the entire remote workflow.</p>
+<h3 id="generate-a-key-pair-on-macos">Generate a Key Pair on macOS</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ssh-keygen</span></span></code></pre>
+<h3 id="copy-the-public-key-into-wsl">Copy the Public Key into WSL</h3>
+<p>Make sure the permissions inside Linux are strict enough:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">chmod</span><span style="color:#79B8FF"> 700</span><span style="color:#9ECBFF"> ~/.ssh</span></span>
+<span class="line"><span style="color:#B392F0">chmod</span><span style="color:#79B8FF"> 600</span><span style="color:#9ECBFF"> ~/.ssh/authorized_keys</span></span></code></pre>
+<p>Incorrect file permissions are one of the most common reasons SSH key authentication fails.</p>
+<h3 id="install-the-ssh-server-in-wsl">Install the SSH Server in WSL</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -y</span><span style="color:#9ECBFF"> openssh-server</span></span></code></pre>
+<h3 id="configure-sshd">Configure <code>sshd</code></h3>
+<p>Edit the SSH server config:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> nano</span><span style="color:#9ECBFF"> /etc/ssh/sshd_config</span></span></code></pre>
+<p>Recommended settings:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>PubkeyAuthentication yes</span></span>
+<span class="line"><span>AuthorizedKeysFile .ssh/authorized_keys</span></span>
+<span class="line"><span>PasswordAuthentication no</span></span></code></pre>
+<p>This gives you a clean <strong>key-based authentication</strong> workflow.</p>
+<p>Restart the service:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> service</span><span style="color:#9ECBFF"> ssh</span><span style="color:#9ECBFF"> restart</span></span></code></pre>
+<hr>
+<h2 id="solving-the-wsl-networking-problem">Solving the WSL Networking Problem</h2>
+<p>The tricky part is that WSL IP addresses are ephemeral.
+They can change after a reboot, which makes direct connection inconvenient.
+To make the connection stable, I used Windows port proxy to expose the Linux SSH port through the Windows host.</p>
+<p>First, get the WSL IP address:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ip</span><span style="color:#9ECBFF"> a</span></span></code></pre>
+<p>Then on Windows PowerShell, run:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">netsh interface portproxy add v4tov4 </span><span style="color:#F97583">`</span></span>
+<span class="line"><span style="color:#E1E4E8">  listenport</span><span style="color:#F97583">=&#x3C;</span><span style="color:#E1E4E8">host</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">ssh</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">port</span><span style="color:#F97583">></span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#E1E4E8">  listenaddress</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">0.0</span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#E1E4E8">  connectport</span><span style="color:#F97583">=&#x3C;</span><span style="color:#E1E4E8">wsl</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">ssh</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">port</span><span style="color:#F97583">></span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#E1E4E8">  connectaddress</span><span style="color:#F97583">=&#x3C;</span><span style="color:#E1E4E8">wsl</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">ip</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">address</span><span style="color:#F97583">></span></span></code></pre>
+<p>For example, this commonly maps:</p>
+<ul>
+<li>Windows port <code>&#x3C;host-ssh-port></code></li>
+<li>to WSL port <code>22</code></li>
+</ul>
+<p>Now the Mac only needs the Windows machine’s LAN IP address.</p>
+<p>This removes most of the pain caused by changing WSL IPs.</p>
+<hr>
+<h2 id="connecting-from-macos">Connecting from macOS</h2>
+<p>With the proxy in place, connecting becomes straightforward:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ssh</span><span style="color:#79B8FF"> -i</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">path-to-private-ke</span><span style="color:#E1E4E8">y</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">wsl-usernam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">@</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">windows-host-lan-i</span><span style="color:#E1E4E8">p</span><span style="color:#F97583">></span><span style="color:#79B8FF"> -p</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">host-ssh-por</span><span style="color:#E1E4E8">t</span><span style="color:#F97583">></span></span></code></pre>
+<p>I strongly prefer defining an SSH alias instead.</p>
+<p>In <code>~/.ssh/config</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Host wsl</span></span>
+<span class="line"><span>  HostName &#x3C;windows-host-lan-ip></span></span>
+<span class="line"><span>  User &#x3C;wsl-username></span></span>
+<span class="line"><span>  Port &#x3C;host-ssh-port></span></span>
+<span class="line"><span>  IdentityFile &#x3C;path-to-private-key></span></span>
+<span class="line"><span>  IdentitiesOnly yes</span></span></code></pre>
+<p>Now the connection becomes:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ssh</span><span style="color:#9ECBFF"> wsl</span></span></code></pre>
+<p>Much cleaner.</p>
+<hr>
+<h2 id="remote-dashboard-access-with-local-port-forwarding">Remote Dashboard Access with Local Port Forwarding</h2>
+<p>The most useful part of the setup is forwarding the OpenClaw dashboard port back to the Mac.</p>
+<p>In <code>~/.ssh/config</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Host wsl-forwarding</span></span>
+<span class="line"><span>  HostName &#x3C;windows-host-lan-ip></span></span>
+<span class="line"><span>  User &#x3C;wsl-username></span></span>
+<span class="line"><span>  Port &#x3C;host-ssh-port></span></span>
+<span class="line"><span>  IdentityFile &#x3C;path-to-private-key></span></span>
+<span class="line"><span>  IdentitiesOnly yes</span></span>
+<span class="line"><span>  LocalForward &#x3C;local-dashboard-port> 127.0.0.1:&#x3C;remote-dashboard-port></span></span></code></pre>
+<p>Then start the tunnel:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ssh</span><span style="color:#79B8FF"> -N</span><span style="color:#9ECBFF"> wsl-forwarding</span></span></code></pre>
+<p>Now the remote dashboard becomes locally accessible on the Mac:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>http://127.0.0.1:&#x3C;local-dashboard-port></span></span></code></pre>
+<p>If your local and remote dashboard ports are both <code>18789</code>, then the result is:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>http://127.0.0.1:18789</span></span></code></pre>
+<p>This is one of the cleanest parts of the setup: the service stays remote, but the usage feels local.</p>
+<hr>
+<h2 id="install-the-macos-companion-app-and-connect-it">Install the macOS Companion App and Connect It</h2>
+<p>Install the macOS Companion App on your Mac and connect it to the remote SSH server running on the Windows machine.</p>
+<p>Here you can insert a screenshot of the connection step:</p>
+<p><img src="/images/openclaw-macos-companion-app-connect.avif" alt="OpenClaw macOS companion app connection"></p>
+<p>Then grant the required permissions:</p>
+<p><img src="/images/openclaw-macos-companion-app-permission.avif" alt="Grant macOS permissions for OpenClaw companion app"></p>
+<p>At this stage, the system is already highly usable.</p>
+<p>The currently stable capabilities include:</p>
+<ul>
+<li>dashboard monitoring and SSH access from the Mac</li>
+<li>screenshot capture and notification access on macOS</li>
+<li>Telegram access from a phone over the internet</li>
+<li>long-running background agents on the Windows laptop</li>
+</ul>
+<p>This is enough for most remote agent orchestration workflows.</p>
+<p>The main missing piece, at least in my setup, is full UI automation or UI control.</p>
+<p>The next layer I want to improve is:</p>
+<ul>
+<li>interaction replay</li>
+<li>richer browser control</li>
+<li>UI action execution</li>
+<li>a tighter remote visual feedback loop</li>
+</ul>
+<p>Once this layer is stable, the setup becomes much closer to a true personal agent workstation.</p>
+<hr>
+<h2 id="another-useful-management-tool">Another Useful Management Tool</h2>
+<p>You can also connect to WSL through <strong>VS Code Remote SSH</strong>.</p>
+<p>This makes file management much easier, especially for:</p>
+<ul>
+<li>editing OpenClaw configuration files</li>
+<li>managing workspace directories</li>
+<li>checking logs</li>
+<li>making quick operational changes without staying in the terminal the whole time</li>
+</ul>
+<p>In practice, I found this especially helpful for routine maintenance.</p>
+<hr>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>What I like most about this setup is that it changes how OpenClaw fits into my daily workflow.</p>
+<p>Instead of being just another local tool, it becomes a persistent remote runtime:</p>
+<ul>
+<li>the Windows box handles execution,</li>
+<li>while the Mac stays focused on thinking, design, and control.</li>
+</ul>
+<p>It turns an unused machine into something much more valuable - a personal always-on AI infrastructure node.</p>
+<p>And honestly, this feels increasingly close to what personal AI workflows may look like in the future.</p> </div> </article> <section aria-label="Comments" class="comments"> <h2>Comments</h2> <script src="https://giscus.app/client.js" data-repo="Whynotmetoo/whynotmetoo.github.io" data-repo-id="R_kgDOROUm4Q" data-category="Announcements" data-category-id="DIC_kwDOROUm4c4C2Qoo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async></script> </section> </div> </div>  </main> <footer class="site-footer" id="about"> <div class="site-shell site-footer-grid"> <section class="site-footer-brand"> <a class="site-brand" href="/">Carson Ye</a> <p> Passionate software engineer with 5+ years of experience building scalable web applications. I enjoy sharing practical engineering lessons from building real products.
+</p> <ul class="site-footer-socials"> <li> <a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer" aria-label="GitHub"> <svg viewBox="0 0 24 24" fill="none"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="https://linkedin.com/in/chongquan" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"> <svg viewBox="0 0 24 24" fill="none"> <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6ZM2 9h4v12H2Zm2-7a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="mailto:hi@carsonye.com" aria-label="Email"> <svg viewBox="0 0 24 24" fill="none"> <path d="M4 6h16v12H4zM4 6l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> </ul> </section> <section> <h2>Navigate</h2> <ul class="site-footer-links"> <li><a href="/">Home</a></li><li><a href="/articles">Articles</a></li><li><a href="/topics">Topics</a></li><li><a href="/about-me">About</a></li> </ul> </section> <section> <h2>Connect</h2> <ul class="site-footer-links"> <li><a href="mailto:hi@carsonye.com">Contact</a></li> <li><a href="/about-me">Resume</a></li> <li><a href="https://linkedin.com/in/chongquan" target="_blank" rel="noopener noreferrer">LinkedIn</a></li> <li><a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer">GitHub</a></li> </ul> </section> </div> <div class="site-shell site-footer-bottom"> <p>© 2026 Carson(Chongquan) Ye. Built with passion and curiosity.</p> </div> </footer> <script>
+      (() => {
+        const toggle = document.querySelector('[data-theme-toggle]');
+        const menuToggle = document.querySelector('[data-mobile-toggle]');
+        const mobileNav = document.querySelector('[data-mobile-nav]');
+        const themeController = window.themeController;
+        const syncSystemTheme = () => {
+          if (themeController?.getThemeMode() === 'system') {
+            themeController.applyTheme('system', false);
+          }
+        };
+
+        themeController?.media.addEventListener?.('change', syncSystemTheme);
+        themeController?.media.addListener?.(syncSystemTheme);
+
+        toggle?.addEventListener('click', () => {
+          if (!themeController) return;
+          themeController.applyTheme(themeController.cycleTheme());
+        });
+
+        menuToggle?.addEventListener('click', () => {
+          if (!mobileNav || !(menuToggle instanceof HTMLButtonElement)) return;
+          const hidden = mobileNav.hasAttribute('hidden');
+          if (hidden) {
+            mobileNav.removeAttribute('hidden');
+            menuToggle.setAttribute('aria-expanded', 'true');
+          } else {
+            mobileNav.setAttribute('hidden', '');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      })();
+    </script> </body> </html>
