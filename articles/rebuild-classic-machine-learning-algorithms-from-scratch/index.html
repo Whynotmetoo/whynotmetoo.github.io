@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preload" href="/fonts/bricolage-grotesque-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/bricolage-grotesque-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><title>What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch | Carson Ye</title><meta name="description" content="Reimplementing classic machine learning algorithms from scratch revealed far more about model behavior, data assumptions, and engineering tradeoffs than any library API ever could."><meta name="author" content="Carson(Chongquan) Ye"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="keywords" content="machine learning, algorithms, python, data science, engineering"><link rel="canonical" href="https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/"><link rel="icon" type="image/svg+xml" href="/favicon/favicon-light.svg" data-site-favicon><link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"><link rel="manifest" href="/favicon/site.webmanifest"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="article"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Carson Ye"><meta property="og:title" content="What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch | Carson Ye"><meta property="og:description" content="Reimplementing classic machine learning algorithms from scratch revealed far more about model behavior, data assumptions, and engineering tradeoffs than any library API ever could."><meta property="og:url" content="https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/"><meta property="og:image" content="https://carsonye.com/og-default.png"><meta property="og:image:secure_url" content="https://carsonye.com/og-default.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch"><meta property="article:published_time" content="2024-06-10T00:00:00.000Z"><meta property="article:modified_time" content="2024-06-10T00:00:00.000Z"><meta property="article:author" content="Carson(Chongquan) Ye"><meta property="article:section" content="machine learning"><meta property="article:tag" content="machine learning"><meta property="article:tag" content="algorithms"><meta property="article:tag" content="python"><meta property="article:tag" content="data science"><meta property="article:tag" content="engineering"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch | Carson Ye"><meta name="twitter:description" content="Reimplementing classic machine learning algorithms from scratch revealed far more about model behavior, data assumptions, and engineering tradeoffs than any library API ever could."><meta name="twitter:image" content="https://carsonye.com/og-default.png"><meta name="twitter:image:alt" content="What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch"><link rel="alternate" type="application/rss+xml" title="Carson Ye RSS" href="/rss.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://carsonye.com/#website","url":"https://carsonye.com","name":"Carson Ye","description":"Engineering, systems, and thoughtful design.","inLanguage":"en-US","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"}},{"@type":"Organization","@id":"https://carsonye.com/#organization","name":"Carson Ye","url":"https://carsonye.com","logo":{"@type":"ImageObject","url":"https://carsonye.com/favicon/apple-touch-icon.png"},"sameAs":["https://github.com/Whynotmetoo","https://www.linkedin.com/in/carsonye"]},{"@type":"Person","@id":"https://carsonye.com/#person","name":"Carson(Chongquan) Ye","url":"https://carsonye.com","image":"https://carsonye.com/profile/Linkedin%20profile.jpg","description":"Passionate software engineer with 5+ years of experience building scalable web applications.","jobTitle":"Software Engineer","homeLocation":{"@type":"Place","name":"Toronto, ON, Canada"},"email":"mailto:hi@carsonye.com","sameAs":["https://github.com/Whynotmetoo","https://www.linkedin.com/in/carsonye"],"worksFor":{"@id":"https://carsonye.com/#organization"}},{"@type":"WebPage","@id":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/#webpage","url":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/","name":"What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch | Carson Ye","description":"Reimplementing classic machine learning algorithms from scratch revealed far more about model behavior, data assumptions, and engineering tradeoffs than any library API ever could.","inLanguage":"en-US","isPartOf":{"@id":"https://carsonye.com/#website"},"about":{"@id":"https://carsonye.com/#person"},"datePublished":"2024-06-10T00:00:00.000Z","dateModified":"2024-06-10T00:00:00.000Z","keywords":"machine learning, algorithms, python, data science, engineering","primaryImageOfPage":{"@type":"ImageObject","url":"https://carsonye.com/og-default.png"}},{"@type":"BlogPosting","@id":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/#article","headline":"What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch","description":"Reimplementing classic machine learning algorithms from scratch revealed far more about model behavior, data assumptions, and engineering tradeoffs than any library API ever could.","url":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/","mainEntityOfPage":{"@id":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/#webpage"},"image":["https://carsonye.com/og-default.png"],"datePublished":"2024-06-10T00:00:00.000Z","dateModified":"2024-06-10T00:00:00.000Z","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"},"articleSection":"Machine Learning","keywords":"machine learning, algorithms, python, data science, engineering","wordCount":969,"inLanguage":"en-US","isAccessibleForFree":true}]}</script><script data-goatcounter="https://carsonye.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preload" href="/fonts/bricolage-grotesque-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/bricolage-grotesque-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><title>What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me | Carson Ye</title><meta name="description" content="Rebuilding classic machine learning algorithms from scratch turned out to be less about formulas and more about numerical stability, data assumptions, and engineering tradeoffs."><meta name="author" content="Carson(Chongquan) Ye"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="keywords" content="machine learning, algorithms, python, engineering, data science"><link rel="canonical" href="https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/"><link rel="icon" type="image/svg+xml" href="/favicon/favicon-light.svg" data-site-favicon><link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"><link rel="manifest" href="/favicon/site.webmanifest"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="article"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Carson Ye"><meta property="og:title" content="What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me | Carson Ye"><meta property="og:description" content="Rebuilding classic machine learning algorithms from scratch turned out to be less about formulas and more about numerical stability, data assumptions, and engineering tradeoffs."><meta property="og:url" content="https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/"><meta property="og:image" content="https://carsonye.com/og-default.png"><meta property="og:image:secure_url" content="https://carsonye.com/og-default.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me"><meta property="article:published_time" content="2026-04-13T00:00:00.000Z"><meta property="article:modified_time" content="2026-04-13T00:00:00.000Z"><meta property="article:author" content="Carson(Chongquan) Ye"><meta property="article:section" content="machine learning"><meta property="article:tag" content="machine learning"><meta property="article:tag" content="algorithms"><meta property="article:tag" content="python"><meta property="article:tag" content="engineering"><meta property="article:tag" content="data science"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me | Carson Ye"><meta name="twitter:description" content="Rebuilding classic machine learning algorithms from scratch turned out to be less about formulas and more about numerical stability, data assumptions, and engineering tradeoffs."><meta name="twitter:image" content="https://carsonye.com/og-default.png"><meta name="twitter:image:alt" content="What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me"><link rel="alternate" type="application/rss+xml" title="Carson Ye RSS" href="/rss.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://carsonye.com/#website","url":"https://carsonye.com","name":"Carson Ye","description":"Engineering, systems, and thoughtful design.","inLanguage":"en-US","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"}},{"@type":"Organization","@id":"https://carsonye.com/#organization","name":"Carson Ye","url":"https://carsonye.com","logo":{"@type":"ImageObject","url":"https://carsonye.com/favicon/apple-touch-icon.png"},"sameAs":["https://github.com/Whynotmetoo","https://www.linkedin.com/in/carsonye"]},{"@type":"Person","@id":"https://carsonye.com/#person","name":"Carson(Chongquan) Ye","url":"https://carsonye.com","image":"https://carsonye.com/profile/Linkedin%20profile.jpg","description":"Passionate software engineer with 5+ years of experience building scalable web applications.","jobTitle":"Software Engineer","homeLocation":{"@type":"Place","name":"Toronto, ON, Canada"},"email":"mailto:hi@carsonye.com","sameAs":["https://github.com/Whynotmetoo","https://www.linkedin.com/in/carsonye"],"worksFor":{"@id":"https://carsonye.com/#organization"}},{"@type":"WebPage","@id":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/#webpage","url":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/","name":"What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me | Carson Ye","description":"Rebuilding classic machine learning algorithms from scratch turned out to be less about formulas and more about numerical stability, data assumptions, and engineering tradeoffs.","inLanguage":"en-US","isPartOf":{"@id":"https://carsonye.com/#website"},"about":{"@id":"https://carsonye.com/#person"},"datePublished":"2026-04-13T00:00:00.000Z","dateModified":"2026-04-13T00:00:00.000Z","keywords":"machine learning, algorithms, python, engineering, data science","primaryImageOfPage":{"@type":"ImageObject","url":"https://carsonye.com/og-default.png"}},{"@type":"BlogPosting","@id":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/#article","headline":"What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me","description":"Rebuilding classic machine learning algorithms from scratch turned out to be less about formulas and more about numerical stability, data assumptions, and engineering tradeoffs.","url":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/","mainEntityOfPage":{"@id":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/#webpage"},"image":["https://carsonye.com/og-default.png"],"datePublished":"2026-04-13T00:00:00.000Z","dateModified":"2026-04-13T00:00:00.000Z","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"},"articleSection":"Machine Learning","keywords":"machine learning, algorithms, python, engineering, data science","wordCount":1129,"inLanguage":"en-US","isAccessibleForFree":true}]}</script><script data-goatcounter="https://carsonye.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>
       (() => {
         const storageKey = 'theme';
         const root = document.documentElement;
@@ -74,27 +74,33 @@
 
         applyTheme(readStoredTheme(), false);
       })();
-    </script><link rel="stylesheet" href="/_astro/about-me.rMag5DqK.css"></head> <body> <header class="site-header"> <div class="layout-shell site-header__row"> <a class="site-brand" href="/">Carson Ye</a> <nav class="site-nav" aria-label="Primary"> <ul class="site-nav__list"> <li class="site-nav__item"><a class="site-nav__link" href="/">Home</a></li><li class="site-nav__item"><a class="site-nav__link" href="/articles">Articles</a></li><li class="site-nav__item"><a class="site-nav__link" href="/topics">Topics</a></li><li class="site-nav__item"><a class="site-nav__link" href="/about-me">About</a></li> </ul> </nav> <div class="site-header__actions"> <a href="/search" class="icon-button" aria-label="Search articles"> <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> <button type="button" class="icon-button theme-toggle" data-theme-toggle aria-label="Toggle theme"> <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle> <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--system" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"></rect> <path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> <button type="button" class="icon-button mobile-nav-toggle" data-mobile-toggle aria-expanded="false" aria-label="Toggle menu"> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--menu" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--close" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> </div> </div> <nav class="mobile-nav layout-shell" data-mobile-nav hidden aria-label="Mobile"> <ul class="mobile-nav__list"> <li class="mobile-nav__item"><a class="mobile-nav__link" href="/">Home</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/articles">Articles</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/topics">Topics</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/about-me">About</a></li> </ul> </nav> </header> <main class="site-main layout-shell">  <div class="article-layout"> <aside class="article-outline" aria-label="Article outline"> <div class="article-outline__panel"> <p class="article-outline__title">Outline</p> <ol class="article-outline__list"> <li class="article-outline__item"> <a href="#why-rebuild-them-from-scratch" class="article-outline__link" style="--outline-depth:0;" title="Why Rebuild Them from Scratch?"> Why Rebuild Them from Scratch? </a> </li><li class="article-outline__item"> <a href="#the-algorithms-i-implemented" class="article-outline__link" style="--outline-depth:0;" title="The Algorithms I Implemented"> The Algorithms I Implemented </a> </li><li class="article-outline__item"> <a href="#the-first-big-lesson-loss-functions-matter-more-than-expected" class="article-outline__link" style="--outline-depth:0;" title="The First Big Lesson: Loss Functions Matter More Than Expected"> The First Big Lesson: Loss Functions Matter More Than Expected </a> </li><li class="article-outline__item"> <a href="#knn-was-surprisingly-strong-for-regression" class="article-outline__link" style="--outline-depth:0;" title="KNN Was Surprisingly Strong for Regression"> KNN Was Surprisingly Strong for Regression </a> </li><li class="article-outline__item"> <a href="#why-decision-trees-struggled-in-regression-but-excelled-in-classification" class="article-outline__link" style="--outline-depth:0;" title="Why Decision Trees Struggled in Regression but Excelled in Classification"> Why Decision Trees Struggled in Regression but Excelled in Classification </a> </li><li class="article-outline__item"> <a href="#accuracy-can-lie-the-logistic-regression-failure-case" class="article-outline__link" style="--outline-depth:0;" title="Accuracy Can Lie: The Logistic Regression Failure Case"> Accuracy Can Lie: The Logistic Regression Failure Case </a> </li><li class="article-outline__item"> <a href="#the-real-engineering-problems-were-outside-the-algorithms" class="article-outline__link" style="--outline-depth:0;" title="The Real Engineering Problems Were Outside the Algorithms"> The Real Engineering Problems Were Outside the Algorithms </a> </li><li class="article-outline__item"> <a href="#the-biggest-shift-in-my-ml-intuition" class="article-outline__link" style="--outline-depth:0;" title="The Biggest Shift in My ML Intuition"> The Biggest Shift in My ML Intuition </a> </li> </ol> </div> </aside> <div class="article-layout__main"> <article class="article-detail"> <nav class="breadcrumbs" aria-label="Breadcrumb"><ol class="breadcrumbs__list"><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/articles">Articles</a></li><li class="breadcrumbs__item"><span class="breadcrumbs__current" aria-current="page">What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch</span></li></ol></nav><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://carsonye.com/articles"},{"@type":"ListItem","position":2,"name":"What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch","item":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/"}]}</script> <header class="article-detail__header"> <h1>What I Learned by Rebuilding Classic Machine Learning Algorithms from Scratch</h1> <p class="meta">Published June 10, 2024</p>  <ul class="tag-list" aria-label="Tags"> <li class="tag-list__item"><a class="tag-list__link" href="/tags/machine-learning/">#machine learning</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/algorithms/">#algorithms</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/python/">#python</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/data-science/">#data science</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/engineering/">#engineering</a></li> </ul> </header> <div class="article-detail__body"> <p>Machine learning libraries make it easy to train models in a few lines of code.</p>
-<p>But that convenience often hides the most valuable part of learning: <strong>why models behave the way they do</strong>.</p>
-<p>To better understand the mechanics behind common algorithms, I rebuilt several classic machine learning models entirely from scratch and evaluated them across both regression and classification tasks.</p>
-<p>What started as an implementation exercise quickly turned into a much deeper lesson in <strong>numerical stability</strong>, <strong>feature representation</strong>, <strong>evaluation metrics</strong>, and <strong>algorithm-data fit</strong>.</p>
-<p>This article walks through the most interesting engineering and modeling lessons from that process.</p>
+    </script><link rel="stylesheet" href="/_astro/about-me.rMag5DqK.css"></head> <body> <header class="site-header"> <div class="layout-shell site-header__row"> <a class="site-brand" href="/">Carson Ye</a> <nav class="site-nav" aria-label="Primary"> <ul class="site-nav__list"> <li class="site-nav__item"><a class="site-nav__link" href="/">Home</a></li><li class="site-nav__item"><a class="site-nav__link" href="/articles">Articles</a></li><li class="site-nav__item"><a class="site-nav__link" href="/topics">Topics</a></li><li class="site-nav__item"><a class="site-nav__link" href="/about-me">About</a></li> </ul> </nav> <div class="site-header__actions"> <a href="/search" class="icon-button" aria-label="Search articles"> <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> <button type="button" class="icon-button theme-toggle" data-theme-toggle aria-label="Toggle theme"> <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle> <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--system" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"></rect> <path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> <button type="button" class="icon-button mobile-nav-toggle" data-mobile-toggle aria-expanded="false" aria-label="Toggle menu"> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--menu" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--close" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> </div> </div> <nav class="mobile-nav layout-shell" data-mobile-nav hidden aria-label="Mobile"> <ul class="mobile-nav__list"> <li class="mobile-nav__item"><a class="mobile-nav__link" href="/">Home</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/articles">Articles</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/topics">Topics</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/about-me">About</a></li> </ul> </nav> </header> <main class="site-main layout-shell">  <div class="article-layout"> <aside class="article-outline" aria-label="Article outline"> <div class="article-outline__panel"> <p class="article-outline__title">Outline</p> <ol class="article-outline__list"> <li class="article-outline__item"> <a href="#why-build-them-from-scratch" class="article-outline__link" style="--outline-depth:0;" title="Why Build Them from Scratch?"> Why Build Them from Scratch? </a> </li><li class="article-outline__item"> <a href="#the-algorithms-i-implemented" class="article-outline__link" style="--outline-depth:0;" title="The Algorithms I Implemented"> The Algorithms I Implemented </a> </li><li class="article-outline__item"> <a href="#the-first-real-problem-wasnt-the-model--it-was-the-loss-scale" class="article-outline__link" style="--outline-depth:0;" title="The First Real Problem Wasn’t the Model — It Was the Loss Scale"> The First Real Problem Wasn’t the Model — It Was the Loss Scale </a> </li><li class="article-outline__item"> <a href="#knn-completely-changed-my-intuition-about-simple-models" class="article-outline__link" style="--outline-depth:0;" title="KNN Completely Changed My Intuition About “Simple Models”"> KNN Completely Changed My Intuition About “Simple Models” </a> </li><li class="article-outline__item"> <a href="#decision-trees-taught-me-the-importance-of-data-shape" class="article-outline__link" style="--outline-depth:0;" title="Decision Trees Taught Me the Importance of Data Shape"> Decision Trees Taught Me the Importance of Data Shape </a> </li><li class="article-outline__item"> <a href="#the-most-valuable-lesson-came-from-a-good-accuracy-score" class="article-outline__link" style="--outline-depth:0;" title="The Most Valuable Lesson Came from a “Good” Accuracy Score"> The Most Valuable Lesson Came from a “Good” Accuracy Score </a> </li><li class="article-outline__item"> <a href="#most-of-the-hard-problems-were-outside-the-algorithms" class="article-outline__link" style="--outline-depth:0;" title="Most of the Hard Problems Were Outside the Algorithms"> Most of the Hard Problems Were Outside the Algorithms </a> </li><li class="article-outline__item"> <a href="#the-biggest-shift-in-how-i-think-about-ml" class="article-outline__link" style="--outline-depth:0;" title="The Biggest Shift in How I Think About ML"> The Biggest Shift in How I Think About ML </a> </li> </ol> </div> </aside> <div class="article-layout__main"> <article class="article-detail"> <nav class="breadcrumbs" aria-label="Breadcrumb"><ol class="breadcrumbs__list"><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/articles">Articles</a></li><li class="breadcrumbs__item"><span class="breadcrumbs__current" aria-current="page">What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me</span></li></ol></nav><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://carsonye.com/articles"},{"@type":"ListItem","position":2,"name":"What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me","item":"https://carsonye.com/articles/rebuild-classic-machine-learning-algorithms-from-scratch/"}]}</script> <header class="article-detail__header"> <h1>What Rebuilding Classic Machine Learning Algorithms from Scratch Actually Taught Me</h1> <p class="meta">Published April 13, 2026</p>  <ul class="tag-list" aria-label="Tags"> <li class="tag-list__item"><a class="tag-list__link" href="/tags/machine-learning/">#machine learning</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/algorithms/">#algorithms</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/python/">#python</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/engineering/">#engineering</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/data-science/">#data science</a></li> </ul> </header> <div class="article-detail__body"> <p>Nowadays machine learning libraries make it possible to train strong baseline models in just a few lines of code.</p>
+<p>That convenience is great for shipping fast.</p>
+<p>But it also hides the exact layer where real intuition is built:<br>
+the implementation details.</p>
+<p>To rebuild that intuition, I implemented several classic machine learning algorithms entirely from scratch in Python and evaluated them across both regression and classification datasets.</p>
+<p>At first, I thought this would mainly be an exercise in re-deriving textbook formulas.</p>
+<p>It turned into something much more useful:</p>
+<p>a hands-on lesson in <strong>numerical stability</strong>, <strong>data representation</strong>, <strong>metric selection</strong>, and <strong>how model assumptions interact with real datasets</strong>.</p>
+<p>This article is a technical retrospective on the most valuable lessons from that process.</p>
 <hr>
-<h2 id="why-rebuild-them-from-scratch">Why Rebuild Them from Scratch?</h2>
-<p>Using libraries like scikit-learn is excellent for productivity, but it abstracts away the implementation details that shape model behavior.</p>
-<p>Rebuilding the algorithms forced me to think about:</p>
+<h2 id="why-build-them-from-scratch">Why Build Them from Scratch?</h2>
+<p>Using libraries like scikit-learn is excellent for production work.</p>
+<p>But abstractions often compress away the exact failure modes that teach the most.</p>
+<p>Rebuilding the models forced me to think carefully about:</p>
 <ul>
-<li>how <strong>gradient descent</strong> actually converges</li>
-<li>why <strong>loss function scaling</strong> matters</li>
-<li>how <strong>distance metrics</strong> influence KNN</li>
-<li>why <strong>categorical features</strong> drastically change model suitability</li>
-<li>how evaluation metrics can produce misleading conclusions</li>
+<li>how <strong>gradient descent (gradient descent)</strong> behaves under different loss scales</li>
+<li>why <strong>distance metrics (distance metric)</strong> can completely change KNN performance</li>
+<li>how <strong>categorical features (categorical features)</strong> reshape model suitability</li>
+<li>why <strong>evaluation metrics (evaluation metrics)</strong> can be dangerously misleading</li>
+<li>where <strong>numerical stability (numerical stability)</strong> issues first appear</li>
 </ul>
-<p>The goal was not to outperform production-grade libraries.</p>
-<p>It was to build a stronger intuition for how classical models actually work under the hood.</p>
+<p>The goal was never to outperform optimized libraries.</p>
+<p>It was to develop a better systems-level intuition for classical machine learning.</p>
+<p>That goal turned out to be far more valuable than I expected.</p>
 <hr>
 <h2 id="the-algorithms-i-implemented">The Algorithms I Implemented</h2>
-<p>The project included implementations of:</p>
+<p>The project included full implementations of:</p>
 <ul>
 <li><strong>Linear Regression</strong></li>
 <li><strong>Logistic Regression</strong></li>
@@ -102,110 +108,138 @@
 <li><strong>K-Nearest Neighbors (KNN)</strong></li>
 <li><strong>Naive Bayes</strong></li>
 </ul>
-<p>These were tested across multiple datasets covering:</p>
+<p>I evaluated them on several very different datasets:</p>
 <ul>
-<li>continuous regression problems</li>
-<li>binary classification</li>
-<li>categorical feature-heavy datasets</li>
-<li>imbalanced failure prediction tasks</li>
+<li>Boston Housing</li>
+<li>Wine Quality</li>
+<li>Breast Cancer</li>
+<li>Mushroom Classification</li>
+<li>Robot Execution Failures</li>
 </ul>
-<p>This variety made the differences between algorithms much more visible.</p>
+<p>This mix was useful because each dataset stresses a different modeling assumption.</p>
+<p>Some reward linearity.</p>
+<p>Some reward local neighborhood structure.</p>
+<p>Some are dominated by categorical splits.</p>
+<p>Some expose severe class imbalance.</p>
+<p>That variety made algorithm behavior much easier to reason about.</p>
 <hr>
-<h2 id="the-first-big-lesson-loss-functions-matter-more-than-expected">The First Big Lesson: Loss Functions Matter More Than Expected</h2>
-<p>One of the earliest surprises came from linear regression.</p>
-<p>I initially used <strong>Sum of Squared Errors (SSE)</strong> as the loss function.</p>
-<p>This quickly introduced <strong>numerical instability</strong> issues.</p>
-<p>Because SSE scales directly with dataset size, both the loss value and gradient magnitude became unnecessarily large, making the model highly sensitive to learning rate choices.</p>
-<p>Switching to <strong>Mean Squared Error (MSE)</strong> immediately improved training stability.</p>
-<p>The performance gain itself was modest, but the optimization process became far more reliable.</p>
-<p>This was one of the first moments where the implementation itself taught something deeper than the textbook formula:</p>
+<h2 id="the-first-real-problem-wasnt-the-model--it-was-the-loss-scale">The First Real Problem Wasn’t the Model — It Was the Loss Scale</h2>
+<p>The first major issue showed up in linear regression.</p>
+<p>I initially implemented the optimization using <strong>Sum of Squared Errors (SSE)</strong>.</p>
+<p>Mathematically this works.</p>
+<p>In practice, it introduced unstable optimization almost immediately.</p>
+<p>Because SSE scales directly with dataset size, both the loss value and gradient magnitude grew larger than necessary.</p>
+<p>That made <strong>learning rate (learning rate)</strong> tuning much more sensitive and occasionally caused unstable convergence.</p>
+<p>Switching to <strong>Mean Squared Error (MSE)</strong> fixed the issue right away.</p>
+<p>The predictive improvement itself was only moderate.</p>
+<p>The real gain was training stability.</p>
+<p>That implementation detail changed how I think about optimization:</p>
 <blockquote>
-<p>the <em>shape</em> of the optimization landscape is only part of the story — the <em>scale</em> matters just as much.</p>
+<p>optimization is shaped not only by the geometry of the loss surface, but also by the numerical scale of the gradients.</p>
 </blockquote>
-<p>This kind of issue is easy to miss when working only with high-level libraries.</p>
+<p>This is exactly the kind of lesson that rarely becomes obvious when working only with library APIs.</p>
 <hr>
-<h2 id="knn-was-surprisingly-strong-for-regression">KNN Was Surprisingly Strong for Regression</h2>
+<h2 id="knn-completely-changed-my-intuition-about-simple-models">KNN Completely Changed My Intuition About “Simple Models”</h2>
 <p>I expected linear regression to dominate structured datasets like Boston Housing.</p>
-<p>Instead, <strong>KNN consistently outperformed it</strong>.</p>
-<p>This was especially clear in the Boston Housing task, where KNN achieved the strongest (R^2).</p>
-<p>The result highlighted an important modeling intuition:</p>
+<p>Instead, <strong>KNN consistently performed better</strong>.</p>
+<p>That result was surprisingly instructive.</p>
+<p>It highlighted a modeling truth that is easy to underestimate:</p>
 <blockquote>
-<p>local similarity assumptions can outperform global linear assumptions when the feature-target relationship is highly nonlinear.</p>
+<p>when the feature space preserves meaningful local structure, local similarity assumptions can outperform global linear assumptions.</p>
 </blockquote>
-<p>This also explained why KNN performed consistently well on the wine quality datasets.</p>
-<p>Even though KNN is often introduced as a “simple baseline,” implementing it from scratch made its strengths much easier to appreciate.</p>
-<p>The model is deceptively powerful when the feature space preserves meaningful neighborhood structure.</p>
+<p>This became even clearer on the wine quality datasets.</p>
+<p>The relationship between chemical properties and quality score is not globally linear.</p>
+<p>But nearby samples in feature space often share similar quality labels.</p>
+<p>That is exactly the kind of structure KNN exploits well.</p>
+<p>Implementing the full <strong>distance function (distance function)</strong> myself made this insight much more concrete.</p>
+<p>A “simple” algorithm can be extremely strong when its assumptions match the geometry of the data.</p>
 <hr>
-<h2 id="why-decision-trees-struggled-in-regression-but-excelled-in-classification">Why Decision Trees Struggled in Regression but Excelled in Classification</h2>
-<p>Decision trees produced one of the most interesting contrasts in the project.</p>
-<p>For regression, they often performed poorly and sometimes even produced <strong>negative (R^2)</strong> scores.</p>
-<p>This suggested severe overfitting and weak generalization.</p>
-<p>But in classification tasks, especially on discrete datasets, they performed exceptionally well.</p>
-<p>This contrast reinforced a key engineering insight:</p>
-<blockquote>
-<p>model suitability is often determined more by data characteristics than by algorithm complexity.</p>
-</blockquote>
-<p>On highly categorical datasets like Mushroom classification, decision trees naturally aligned with the structure of the input space.</p>
-<p>The splitting logic matched the data representation almost perfectly.</p>
-<p>That fit mattered more than theoretical model sophistication.</p>
-<hr>
-<h2 id="accuracy-can-lie-the-logistic-regression-failure-case">Accuracy Can Lie: The Logistic Regression Failure Case</h2>
-<p>The most valuable lesson from the classification experiments came from <strong>imbalanced datasets</strong>.</p>
-<p>In several Robot Execution Failure tasks, logistic regression reported <strong>very high accuracy</strong>.</p>
-<p>At first glance, the results looked excellent.</p>
-<p>But the <strong>F1 score was exactly zero</strong>.</p>
-<p>That immediately revealed what was happening:</p>
-<p>the model had learned to predict only the majority class.</p>
-<p>This was a strong reminder that:</p>
-<blockquote>
-<p>accuracy alone can completely hide failure modes in imbalanced classification.</p>
-</blockquote>
-<p>Seeing this emerge from my own implementation made the lesson much more concrete than simply reading about it.</p>
-<p>From then on, I started treating <strong>precision</strong>, <strong>recall</strong>, and <strong>F1 score</strong> as first-class metrics rather than secondary validation numbers.</p>
-<hr>
-<h2 id="the-real-engineering-problems-were-outside-the-algorithms">The Real Engineering Problems Were Outside the Algorithms</h2>
-<p>The hardest parts of the project were not the formulas.</p>
-<p>They were the surrounding engineering problems:</p>
+<h2 id="decision-trees-taught-me-the-importance-of-data-shape">Decision Trees Taught Me the Importance of Data Shape</h2>
+<p>Decision trees produced the most dramatic contrast in results.</p>
+<p>For regression, they often performed poorly and sometimes produced <strong>negative R²</strong>.</p>
+<p>For classification, especially on discrete datasets, they performed exceptionally well.</p>
+<p>The regression failure made sense after revisiting the implementation.</p>
+<p>My tree used:</p>
 <ul>
-<li><strong>categorical encoding</strong></li>
-<li><strong>feature normalization</strong></li>
-<li><strong>memory efficiency</strong></li>
-<li><strong>distance computation cost</strong></li>
-<li><strong>class imbalance</strong></li>
-<li><strong>overflow prevention</strong></li>
-<li><strong>runtime performance</strong></li>
+<li>greedy threshold search</li>
+<li>unique-value threshold candidates</li>
+<li>no post-pruning</li>
+<li>shallow max depth defaults</li>
+<li>direct SSE-based split selection</li>
 </ul>
-<p>KNN, for example, was straightforward mathematically, but its brute-force distance computation quickly exposed computational bottlenecks.</p>
-<p>This naturally led to ideas like:</p>
+<p>That setup works well for clean piecewise boundaries.</p>
+<p>But on noisy continuous targets, it can overfit local partitions and generalize poorly.</p>
+<p>On the other hand, categorical classification datasets like Mushroom were a perfect fit.</p>
+<p>The split logic naturally aligned with the feature structure.</p>
+<p>This reinforced one of the strongest lessons from the entire project:</p>
+<blockquote>
+<p>the shape of the data matters more than the theoretical sophistication of the algorithm.</p>
+</blockquote>
+<hr>
+<h2 id="the-most-valuable-lesson-came-from-a-good-accuracy-score">The Most Valuable Lesson Came from a “Good” Accuracy Score</h2>
+<p>The biggest practical lesson came from the Robot Execution Failure datasets.</p>
+<p>Some logistic regression runs reported <strong>very high accuracy</strong>.</p>
+<p>At first glance, the models looked successful.</p>
+<p>Then I checked the <strong>F1 score (F1 score)</strong>.</p>
+<p>It was exactly zero.</p>
+<p>That immediately exposed the real behavior:</p>
+<p>the model had learned to predict only the majority class.</p>
+<p>This was a much stronger lesson than any textbook explanation of imbalance.</p>
+<p>Seeing it emerge from my own implementation permanently changed how I evaluate classifiers.</p>
+<p>Now I treat:</p>
+<ul>
+<li><strong>precision (precision)</strong></li>
+<li><strong>recall (recall)</strong></li>
+<li><strong>F1 score</strong></li>
+<li><strong>confusion matrix (confusion matrix)</strong></li>
+</ul>
+<p>as primary metrics rather than optional diagnostics.</p>
+<p>A high <strong>accuracy (accuracy)</strong> score can hide total model failure.</p>
+<p>This project made that impossible to forget.</p>
+<hr>
+<h2 id="most-of-the-hard-problems-were-outside-the-algorithms">Most of the Hard Problems Were Outside the Algorithms</h2>
+<p>The actual formulas were rarely the hardest part.</p>
+<p>The surrounding engineering work was.</p>
+<p>The most time-consuming parts included:</p>
+<ul>
+<li><strong>categorical encoding (categorical encoding)</strong></li>
+<li><strong>feature normalization (feature normalization)</strong></li>
+<li><strong>distance computation cost</strong></li>
+<li><strong>probability underflow (probability underflow)</strong></li>
+<li><strong>variance smoothing</strong></li>
+<li><strong>memory efficiency (memory efficiency)</strong></li>
+</ul>
+<p>For example, KNN is mathematically simple.</p>
+<p>But brute-force distance search quickly becomes expensive as dataset size grows.</p>
+<p>That naturally led me to think about production optimizations like:</p>
 <ul>
 <li><strong>KD-Tree</strong></li>
 <li><strong>Ball Tree</strong></li>
-<li>approximate nearest neighbor indexing</li>
+<li><strong>Approximate Nearest Neighbor (ANN)</strong></li>
 </ul>
-<p>Similarly, Naive Bayes required careful handling of probability underflow and smoothing.</p>
-<p>These are the kinds of implementation details that rarely receive enough attention in classroom discussions, but they dominate real-world ML systems.</p>
+<p>Similarly, Naive Bayes required careful variance smoothing to avoid divide-by-zero and unstable log probabilities.</p>
+<p>These “small” implementation details are where real engineering intuition gets built.</p>
 <hr>
-<h2 id="the-biggest-shift-in-my-ml-intuition">The Biggest Shift in My ML Intuition</h2>
-<p>The most important takeaway from this project was a shift in how I think about model selection.</p>
-<p>I used to think in terms of:</p>
+<h2 id="the-biggest-shift-in-how-i-think-about-ml">The Biggest Shift in How I Think About ML</h2>
+<p>Before this project, I often thought about model selection as:</p>
 <blockquote>
-<p>“which algorithm is stronger?”</p>
+<p>which algorithm is stronger?</p>
 </blockquote>
-<p>Now I think in terms of:</p>
+<p>Now I think about it as:</p>
 <blockquote>
-<p>“which assumptions best match the data?”</p>
+<p>which assumptions best match the structure of the data?</p>
 </blockquote>
-<p>That is a much more practical engineering mindset.</p>
-<p>The experiments made several things very clear:</p>
+<p>That shift is much more practical.</p>
+<p>The experiments made several lessons very clear:</p>
 <ul>
-<li>feature types often matter more than model complexity</li>
-<li>numerical stability can dominate theoretical elegance</li>
+<li>feature representation often matters more than model complexity</li>
 <li>local structure can beat global assumptions</li>
-<li>evaluation metrics shape conclusions</li>
-<li>preprocessing often matters as much as model choice</li>
+<li>numerical stability can dominate optimization quality</li>
+<li>evaluation metrics shape the story your results tell</li>
+<li>preprocessing can matter as much as the model itself</li>
 </ul>
-<p>Rebuilding the algorithms from scratch made these lessons impossible to ignore.</p>
-<p>And that deeper intuition is far more valuable than simply knowing how to call <code>.fit()</code>.</p> </div> </article>  <section aria-label="Comments" class="comments"> <h2 class="comments__title">Comments</h2> <script src="https://giscus.app/client.js" data-repo="Whynotmetoo/whynotmetoo.github.io" data-repo-id="R_kgDOROUm4Q" data-category="Announcements" data-category-id="DIC_kwDOROUm4c4C2Qoo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async></script> </section> </div> </div>  </main> <footer class="site-footer" id="about"> <div class="layout-shell site-footer__grid"> <section class="site-footer__brand"> <a class="site-brand" href="/">Carson Ye</a> <p> Passionate software engineer with 5+ years of experience building scalable web applications. I enjoy sharing practical engineering lessons from building real products.
+<p>Rebuilding these algorithms from scratch made those lessons feel real.</p>
+<p>And that deeper intuition has been far more valuable than simply knowing how to call <code>.fit()</code>.</p> </div> </article>  <section aria-label="Comments" class="comments"> <h2 class="comments__title">Comments</h2> <script src="https://giscus.app/client.js" data-repo="Whynotmetoo/whynotmetoo.github.io" data-repo-id="R_kgDOROUm4Q" data-category="Announcements" data-category-id="DIC_kwDOROUm4c4C2Qoo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async></script> </section> </div> </div>  </main> <footer class="site-footer" id="about"> <div class="layout-shell site-footer__grid"> <section class="site-footer__brand"> <a class="site-brand" href="/">Carson Ye</a> <p> Passionate software engineer with 5+ years of experience building scalable web applications. I enjoy sharing practical engineering lessons from building real products.
 </p> <ul class="site-footer__socials"> <li> <a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer" aria-label="GitHub"> <svg viewBox="0 0 24 24" fill="none"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="https://www.linkedin.com/in/carsonye" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"> <svg viewBox="0 0 24 24" fill="none"> <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6ZM2 9h4v12H2Zm2-7a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="mailto:hi@carsonye.com" aria-label="Email"> <svg viewBox="0 0 24 24" fill="none"> <path d="M4 6h16v12H4zM4 6l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> </ul> </section> <section> <h2>Navigate</h2> <ul class="site-footer__links"> <li><a href="/">Home</a></li><li><a href="/articles">Articles</a></li><li><a href="/topics">Topics</a></li><li><a href="/about-me">About</a></li> </ul> </section> <section> <h2>Connect</h2> <ul class="site-footer__links"> <li><a href="/about-me">Contact</a></li> <li><a href="/about-me">Resume</a></li> <li><a href="https://www.linkedin.com/in/carsonye" target="_blank" rel="noopener noreferrer">LinkedIn</a></li> <li><a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer">GitHub</a></li> </ul> </section> </div> <div class="layout-shell site-footer__bottom"> <p>© 2026 Carson(Chongquan) Ye. Built with passion and curiosity.</p> </div> </footer> <script>
       (() => {
         const toggle = document.querySelector('[data-theme-toggle]');
