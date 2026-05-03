@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preload" href="/fonts/bricolage-grotesque-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/bricolage-grotesque-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><title>Support EnhanceGPT | Carson Ye</title><meta name="description" content="Support EnhanceGPT, a free open-source Chrome extension that improves the ChatGPT experience."><meta name="author" content="Carson Ye"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="keywords" content="EnhanceGPT, Chrome extension, ChatGPT extension, open source, support"><link rel="canonical" href="https://carsonye.com/enhancegpt/support/"><link rel="icon" type="image/svg+xml" href="/favicon/favicon-light.svg" data-site-favicon><link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"><link rel="manifest" href="/favicon/site.webmanifest"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Carson Ye"><meta property="og:title" content="Support EnhanceGPT | Carson Ye"><meta property="og:description" content="Support EnhanceGPT, a free open-source Chrome extension that improves the ChatGPT experience."><meta property="og:url" content="https://carsonye.com/enhancegpt/support/"><meta property="og:image" content="https://carsonye.com/images/enhancegpt/icon.svg"><meta property="og:image:secure_url" content="https://carsonye.com/images/enhancegpt/icon.svg"><meta property="og:image:type" content="image/svg+xml"><meta property="og:image:alt" content="EnhanceGPT extension icon"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Support EnhanceGPT | Carson Ye"><meta name="twitter:description" content="Support EnhanceGPT, a free open-source Chrome extension that improves the ChatGPT experience."><meta name="twitter:image" content="https://carsonye.com/images/enhancegpt/icon.svg"><meta name="twitter:image:alt" content="EnhanceGPT extension icon"><link rel="alternate" type="application/rss+xml" title="Carson Ye RSS" href="/rss.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://carsonye.com/#website","url":"https://carsonye.com","name":"Carson Ye","description":"Engineering, systems, and thoughtful design.","inLanguage":"en-US","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"}},{"@type":"Organization","@id":"https://carsonye.com/#organization","name":"Carson Ye","url":"https://carsonye.com","logo":{"@type":"ImageObject","url":"https://carsonye.com/favicon/apple-touch-icon.png"},"sameAs":["https://github.com/Whynotmetoo"]},{"@type":"Person","@id":"https://carsonye.com/#person","name":"Carson Ye","url":"https://carsonye.com","image":"https://carsonye.com/profile/profile.jpg","description":"Passionate software engineer with 5+ years of experience building scalable web applications.","jobTitle":"Software Engineer","homeLocation":{"@type":"Place","name":"Toronto, ON, Canada"},"email":"mailto:hi@carsonye.com","sameAs":["https://github.com/Whynotmetoo"],"worksFor":{"@id":"https://carsonye.com/#organization"}},{"@type":"WebPage","@id":"https://carsonye.com/enhancegpt/support/#webpage","url":"https://carsonye.com/enhancegpt/support/","name":"Support EnhanceGPT | Carson Ye","description":"Support EnhanceGPT, a free open-source Chrome extension that improves the ChatGPT experience.","inLanguage":"en-US","isPartOf":{"@id":"https://carsonye.com/#website"},"about":{"@id":"https://carsonye.com/#person"},"keywords":"EnhanceGPT, Chrome extension, ChatGPT extension, open source, support","primaryImageOfPage":{"@type":"ImageObject","url":"https://carsonye.com/images/enhancegpt/icon.svg"}},{"@type":"SoftwareApplication","@id":"https://carsonye.com/enhancegpt/support/#enhancegpt","name":"EnhanceGPT","applicationCategory":"BrowserApplication","operatingSystem":"Chrome","description":"Support EnhanceGPT, a free open-source Chrome extension that improves the ChatGPT experience.","image":"https://carsonye.com/images/enhancegpt/icon.svg","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"sameAs":["https://github.com/sponsors/Whynotmetoo","https://paypal.me/carsonyelink?locale.x=en_US&country.x=CA"]}]}</script><script data-goatcounter="https://carsonye.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>
+      (() => {
+        const storageKey = 'theme';
+        const root = document.documentElement;
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const favicon = document.querySelector('[data-site-favicon]');
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const faviconHref = {
+          light: '/favicon/favicon-light.svg',
+          dark: '/favicon/favicon-dark.svg',
+        };
+        const themeColorValue = {
+          light: '#ffffff',
+          dark: '#0f172a',
+        };
+
+        const readStoredTheme = () => {
+          try {
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'light' || saved === 'dark' || saved === 'system') {
+              return saved;
+            }
+          } catch {}
+
+          return 'system';
+        };
+
+        const persistTheme = (mode) => {
+          try {
+            localStorage.setItem(storageKey, mode);
+          } catch {}
+        };
+
+        const resolveTheme = (mode) => (
+          mode === 'dark' || (mode === 'system' && media.matches) ? 'dark' : 'light'
+        );
+
+        const applyTheme = (mode, persist = true) => {
+          const nextMode = mode === 'light' || mode === 'dark' || mode === 'system' ? mode : 'system';
+          const resolvedTheme = resolveTheme(nextMode);
+
+          root.classList.toggle('dark', resolvedTheme === 'dark');
+          root.dataset.themeMode = nextMode;
+          root.dataset.themeResolved = resolvedTheme;
+
+          if (favicon instanceof HTMLLinkElement) {
+            favicon.href = faviconHref[resolvedTheme];
+          }
+
+          if (themeColor instanceof HTMLMetaElement) {
+            themeColor.content = themeColorValue[resolvedTheme];
+          }
+
+          if (persist) {
+            persistTheme(nextMode);
+          }
+
+          return nextMode;
+        };
+
+        const cycleTheme = () => {
+          const current = root.dataset.themeMode || 'system';
+          if (current === 'light') return 'dark';
+          if (current === 'dark') return 'system';
+          return 'light';
+        };
+
+        window.themeController = {
+          applyTheme,
+          cycleTheme,
+          getThemeMode: () => root.dataset.themeMode || readStoredTheme(),
+          media,
+        };
+
+        applyTheme(readStoredTheme(), false);
+      })();
+    </script><link rel="stylesheet" href="/_astro/support.BLi51Bs4.css">
+<link rel="stylesheet" href="/_astro/about-me.Cx5QQg5W.css"></head> <body>  <main class="site-main">  <section class="support-page" aria-labelledby="support-title" data-astro-cid-62g6zgls> <header class="support-page__topbar" aria-label="EnhanceGPT" data-astro-cid-62g6zgls> <a class="support-page__brand" href="/enhancegpt/support/" aria-label="EnhanceGPT support page" data-astro-cid-62g6zgls> <img src="/images/enhancegpt/icon.svg" alt="" width="40" height="40" data-astro-cid-62g6zgls> <span data-astro-cid-62g6zgls>EnhanceGPT</span> </a> <span class="support-page__label" data-astro-cid-62g6zgls>Extension support</span> </header> <div class="support-page__shell" data-astro-cid-62g6zgls> <div class="support-page__intro" data-astro-cid-62g6zgls> <p class="support-page__eyebrow" data-astro-cid-62g6zgls>Open-source Chrome extension</p> <h1 id="support-title" data-astro-cid-62g6zgls>Support this extension</h1> <p class="support-page__lead" data-astro-cid-62g6zgls>
+EnhanceGPT is open-source and free to use. Because the ChatGPT interface may change over
+          time, ongoing maintenance is needed to keep the extension working smoothly and compatible
+          with future updates.
+</p> <p class="support-page__copy" data-astro-cid-62g6zgls>
+Your support helps me continue improving the extension, fixing compatibility issues, and
+          adding useful features that enhance the ChatGPT experience. Thank you for your support.
+</p> </div> <div class="support-page__methods" aria-label="Support methods" data-astro-cid-62g6zgls> <article class="support-card support-card--github" data-astro-cid-62g6zgls> <div data-astro-cid-62g6zgls> <p class="support-card__kicker" data-astro-cid-62g6zgls>One-time or Monthly support</p> <h2 data-astro-cid-62g6zgls>GitHub Sponsors</h2> <p data-astro-cid-62g6zgls>Support through GitHub.</p> </div> <a class="support-card__button support-card__button--dark" href="https://github.com/sponsors/Whynotmetoo" target="_blank" rel="noopener noreferrer" data-astro-cid-62g6zgls>
+Sponsor on GitHub
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" data-astro-cid-62g6zgls> <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-62g6zgls></path> </svg> </a> </article> <article class="support-card support-card--paypal" data-astro-cid-62g6zgls> <div class="support-card__content" data-astro-cid-62g6zgls> <p class="support-card__kicker" data-astro-cid-62g6zgls>One-time support</p> <h2 data-astro-cid-62g6zgls>PayPal</h2> <p data-astro-cid-62g6zgls>Use the PayPal link or scan the QR code.</p> </div> <div class="support-card__pay-action" data-astro-cid-62g6zgls> <a class="support-card__button" href="https://paypal.me/carsonyelink?locale.x=en_US&country.x=CA" target="_blank" rel="noopener noreferrer" data-astro-cid-62g6zgls>
+Open paypal.me
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" data-astro-cid-62g6zgls> <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-62g6zgls></path> </svg> </a> <div class="support-card__qr" data-astro-cid-62g6zgls> <img src="/images/enhancegpt/paypal_qr_code.jpg" alt="PayPal QR code for Carson Ye" width="1170" height="2532" loading="lazy" data-astro-cid-62g6zgls> </div> </div> </article> </div> </div> </section>  </main>   </body> </html> 
