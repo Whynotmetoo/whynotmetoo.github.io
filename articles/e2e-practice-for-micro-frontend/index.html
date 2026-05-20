@@ -1,0 +1,464 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preload" href="/fonts/bricolage-grotesque-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/bricolage-grotesque-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><title>Building an E2E Testing Architecture for a Complex Micro-Frontend | Carson Ye</title><meta name="description" content="A practical summary of how I structured E2E tests for a large micro-frontend project, including test goals, layered architecture, reusable cases, Page Objects, file validation, and lessons learned."><meta name="author" content="Carson Ye"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="keywords" content="e2e, testing, micro-frontend"><link rel="canonical" href="https://carsonye.com/articles/e2e-practice-for-micro-frontend/"><link rel="icon" type="image/svg+xml" href="/favicon/favicon-light.svg" data-site-favicon><link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"><link rel="manifest" href="/favicon/site.webmanifest"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="article"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Carson Ye"><meta property="og:title" content="Building an E2E Testing Architecture for a Complex Micro-Frontend | Carson Ye"><meta property="og:description" content="A practical summary of how I structured E2E tests for a large micro-frontend project, including test goals, layered architecture, reusable cases, Page Objects, file validation, and lessons learned."><meta property="og:url" content="https://carsonye.com/articles/e2e-practice-for-micro-frontend/"><meta property="og:image" content="https://carsonye.com/og-default.png"><meta property="og:image:secure_url" content="https://carsonye.com/og-default.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Building an E2E Testing Architecture for a Complex Micro-Frontend"><meta property="article:published_time" content="2023-01-20T00:00:00.000Z"><meta property="article:modified_time" content="2023-01-20T00:00:00.000Z"><meta property="article:author" content="Carson Ye"><meta property="article:section" content="e2e"><meta property="article:tag" content="e2e"><meta property="article:tag" content="testing"><meta property="article:tag" content="micro-frontend"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Building an E2E Testing Architecture for a Complex Micro-Frontend | Carson Ye"><meta name="twitter:description" content="A practical summary of how I structured E2E tests for a large micro-frontend project, including test goals, layered architecture, reusable cases, Page Objects, file validation, and lessons learned."><meta name="twitter:image" content="https://carsonye.com/og-default.png"><meta name="twitter:image:alt" content="Building an E2E Testing Architecture for a Complex Micro-Frontend"><link rel="alternate" type="application/rss+xml" title="Carson Ye RSS" href="/rss.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://carsonye.com/#website","url":"https://carsonye.com","name":"Carson Ye","description":"Engineering, systems, and thoughtful design.","inLanguage":"en-US","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"}},{"@type":"Organization","@id":"https://carsonye.com/#organization","name":"Carson Ye","url":"https://carsonye.com","logo":{"@type":"ImageObject","url":"https://carsonye.com/favicon/apple-touch-icon.png"},"sameAs":["https://github.com/Whynotmetoo"]},{"@type":"Person","@id":"https://carsonye.com/#person","name":"Carson Ye","url":"https://carsonye.com","image":"https://carsonye.com/profile/profile.jpg","description":"Passionate software engineer with 5+ years of experience building scalable web applications.","jobTitle":"Software Engineer","homeLocation":{"@type":"Place","name":"Toronto, ON, Canada"},"email":"mailto:hi@carsonye.com","sameAs":["https://github.com/Whynotmetoo"],"worksFor":{"@id":"https://carsonye.com/#organization"}},{"@type":"WebPage","@id":"https://carsonye.com/articles/e2e-practice-for-micro-frontend/#webpage","url":"https://carsonye.com/articles/e2e-practice-for-micro-frontend/","name":"Building an E2E Testing Architecture for a Complex Micro-Frontend | Carson Ye","description":"A practical summary of how I structured E2E tests for a large micro-frontend project, including test goals, layered architecture, reusable cases, Page Objects, file validation, and lessons learned.","inLanguage":"en-US","isPartOf":{"@id":"https://carsonye.com/#website"},"about":{"@id":"https://carsonye.com/#person"},"datePublished":"2023-01-20T00:00:00.000Z","dateModified":"2023-01-20T00:00:00.000Z","keywords":"e2e, testing, micro-frontend","primaryImageOfPage":{"@type":"ImageObject","url":"https://carsonye.com/og-default.png"}},{"@type":"BlogPosting","@id":"https://carsonye.com/articles/e2e-practice-for-micro-frontend/#article","headline":"Building an E2E Testing Architecture for a Complex Micro-Frontend","description":"A practical summary of how I structured E2E tests for a large micro-frontend project, including test goals, layered architecture, reusable cases, Page Objects, file validation, and lessons learned.","url":"https://carsonye.com/articles/e2e-practice-for-micro-frontend/","mainEntityOfPage":{"@id":"https://carsonye.com/articles/e2e-practice-for-micro-frontend/#webpage"},"image":["https://carsonye.com/og-default.png"],"datePublished":"2023-01-20T00:00:00.000Z","dateModified":"2023-01-20T00:00:00.000Z","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"},"articleSection":"E2e","keywords":"e2e, testing, micro-frontend","wordCount":2626,"inLanguage":"en-US","isAccessibleForFree":true}]}</script><script data-goatcounter="https://carsonye.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script>
+      (() => {
+        const storageKey = 'theme';
+        const root = document.documentElement;
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const favicon = document.querySelector('[data-site-favicon]');
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const faviconHref = {
+          light: '/favicon/favicon-light.svg',
+          dark: '/favicon/favicon-dark.svg',
+        };
+        const themeColorValue = {
+          light: '#ffffff',
+          dark: '#0f172a',
+        };
+
+        const readStoredTheme = () => {
+          try {
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'light' || saved === 'dark' || saved === 'system') {
+              return saved;
+            }
+          } catch {}
+
+          return 'system';
+        };
+
+        const persistTheme = (mode) => {
+          try {
+            localStorage.setItem(storageKey, mode);
+          } catch {}
+        };
+
+        const resolveTheme = (mode) => (
+          mode === 'dark' || (mode === 'system' && media.matches) ? 'dark' : 'light'
+        );
+
+        const applyTheme = (mode, persist = true) => {
+          const nextMode = mode === 'light' || mode === 'dark' || mode === 'system' ? mode : 'system';
+          const resolvedTheme = resolveTheme(nextMode);
+
+          root.classList.toggle('dark', resolvedTheme === 'dark');
+          root.dataset.themeMode = nextMode;
+          root.dataset.themeResolved = resolvedTheme;
+
+          if (favicon instanceof HTMLLinkElement) {
+            favicon.href = faviconHref[resolvedTheme];
+          }
+
+          if (themeColor instanceof HTMLMetaElement) {
+            themeColor.content = themeColorValue[resolvedTheme];
+          }
+
+          if (persist) {
+            persistTheme(nextMode);
+          }
+
+          return nextMode;
+        };
+
+        const cycleTheme = () => {
+          const current = root.dataset.themeMode || 'system';
+          if (current === 'light') return 'dark';
+          if (current === 'dark') return 'system';
+          return 'light';
+        };
+
+        window.themeController = {
+          applyTheme,
+          cycleTheme,
+          getThemeMode: () => root.dataset.themeMode || readStoredTheme(),
+          media,
+        };
+
+        applyTheme(readStoredTheme(), false);
+      })();
+    </script><link rel="stylesheet" href="/_astro/about-me.azrTNmLB.css"></head> <body> <header class="site-header"> <div class="layout-shell site-header__row"> <a class="site-brand" href="/">Carson Ye</a> <nav class="site-nav" aria-label="Primary"> <ul class="site-nav__list"> <li class="site-nav__item"><a class="site-nav__link" href="/">Home</a></li><li class="site-nav__item"><a class="site-nav__link" href="/articles">Articles</a></li><li class="site-nav__item"><a class="site-nav__link" href="/topics">Topics</a></li><li class="site-nav__item"><a class="site-nav__link" href="/about-me">About</a></li> </ul> </nav> <div class="site-header__actions"> <a href="/search" class="icon-button" aria-label="Search articles"> <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> <button type="button" class="icon-button theme-toggle" data-theme-toggle aria-label="Toggle theme"> <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle> <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--system" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"></rect> <path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> <button type="button" class="icon-button mobile-nav-toggle" data-mobile-toggle aria-expanded="false" aria-label="Toggle menu"> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--menu" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--close" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> </div> </div> <nav class="mobile-nav layout-shell" data-mobile-nav hidden aria-label="Mobile"> <ul class="mobile-nav__list"> <li class="mobile-nav__item"><a class="mobile-nav__link" href="/">Home</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/articles">Articles</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/topics">Topics</a></li><li class="mobile-nav__item"><a class="mobile-nav__link" href="/about-me">About</a></li> </ul> </nav> </header> <main class="site-main layout-shell">  <div class="article-layout"> <aside class="article-outline" aria-label="Article outline"> <div class="article-outline__panel"> <p class="article-outline__title">Outline</p> <ol class="article-outline__list"> <li class="article-outline__item"> <a href="#background" class="article-outline__link" style="--outline-depth:0;" title="Background"> Background </a> </li><li class="article-outline__item"> <a href="#goals" class="article-outline__link" style="--outline-depth:0;" title="Goals"> Goals </a> </li><li class="article-outline__item"> <a href="#overall-structure" class="article-outline__link" style="--outline-depth:0;" title="Overall Structure"> Overall Structure </a> </li><li class="article-outline__item"> <a href="#base-element" class="article-outline__link" style="--outline-depth:0;" title="Base Element"> Base Element </a> </li><li class="article-outline__item"> <a href="#base-module" class="article-outline__link" style="--outline-depth:0;" title="Base Module"> Base Module </a> </li><li class="article-outline__item"> <a href="#base-page-object" class="article-outline__link" style="--outline-depth:0;" title="Base Page Object"> Base Page Object </a> </li><li class="article-outline__item"> <a href="#case" class="article-outline__link" style="--outline-depth:0;" title="Case"> Case </a> </li><li class="article-outline__item"> <a href="#case-group" class="article-outline__link" style="--outline-depth:0;" title="Case Group"> Case Group </a> </li><li class="article-outline__item"> <a href="#spec" class="article-outline__link" style="--outline-depth:0;" title="Spec"> Spec </a> </li><li class="article-outline__item"> <a href="#user-matrix" class="article-outline__link" style="--outline-depth:0;" title="User Matrix"> User Matrix </a> </li><li class="article-outline__item"> <a href="#file-upload-and-download" class="article-outline__link" style="--outline-depth:0;" title="File Upload and Download"> File Upload and Download </a> </li><li class="article-outline__item"> <a href="#react-controlled-input-issue" class="article-outline__link" style="--outline-depth:0;" title="React Controlled Input Issue"> React Controlled Input Issue </a> </li><li class="article-outline__item"> <a href="#dialog-and-legacy-ui-issues" class="article-outline__link" style="--outline-depth:0;" title="Dialog and Legacy UI Issues"> Dialog and Legacy UI Issues </a> </li><li class="article-outline__item"> <a href="#waiting-strategy" class="article-outline__link" style="--outline-depth:0;" title="Waiting Strategy"> Waiting Strategy </a> </li><li class="article-outline__item"> <a href="#test-data-and-cleanup" class="article-outline__link" style="--outline-depth:0;" title="Test Data and Cleanup"> Test Data and Cleanup </a> </li><li class="article-outline__item"> <a href="#reports" class="article-outline__link" style="--outline-depth:0;" title="Reports"> Reports </a> </li><li class="article-outline__item"> <a href="#what-works-well" class="article-outline__link" style="--outline-depth:0;" title="What Works Well"> What Works Well </a> </li><li class="article-outline__item"> <a href="#current-problems" class="article-outline__link" style="--outline-depth:0;" title="Current Problems"> Current Problems </a> </li><li class="article-outline__item"> <a href="#improvements-i-want-to-make" class="article-outline__link" style="--outline-depth:0;" title="Improvements I Want to Make"> Improvements I Want to Make </a> </li><li class="article-outline__item"> <a href="#summary" class="article-outline__link" style="--outline-depth:0;" title="Summary"> Summary </a> </li> </ol> </div> </aside> <div class="article-layout__main"> <article class="article-detail"> <nav class="breadcrumbs" aria-label="Breadcrumb"><ol class="breadcrumbs__list"><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/articles">Articles</a></li><li class="breadcrumbs__item"><span class="breadcrumbs__current" aria-current="page">Building an E2E Testing Architecture for a Complex Micro-Frontend</span></li></ol></nav><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://carsonye.com/articles"},{"@type":"ListItem","position":2,"name":"Building an E2E Testing Architecture for a Complex Micro-Frontend","item":"https://carsonye.com/articles/e2e-practice-for-micro-frontend/"}]}</script> <header class="article-detail__header"> <h1>Building an E2E Testing Architecture for a Complex Micro-Frontend</h1> <p class="meta">Published January 20, 2023</p>  <ul class="tag-list" aria-label="Tags"> <li class="tag-list__item"><a class="tag-list__link" href="/tags/e2e/">#e2e</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/testing/">#testing</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/micro-frontend/">#micro-frontend</a></li> </ul> </header> <div class="article-detail__body"> <p>Before creating an E2E architecture for a complex project, I did not realize this work could become so involved.</p>
+<p>At the beginning, I thought it would mostly be about writing browser automation: open a page, click a button, fill in a form, and verify the result. But after working on it for a while, I found that E2E testing is much closer to building a small testing platform.</p>
+<p>There are page objects to design, test data to prepare, roles and permissions to consider, browser behavior to handle, files to upload and download, and many flaky situations to avoid.</p>
+<p>After finishing one stage of the work, I want to write down what happened during this busy period. Hopefully, when I or someone else looks back at this later, it can make the next round of E2E work a little easier.</p>
+<h2 id="background">Background</h2>
+<p>The project I am working on is a large micro-frontend inside an existing enterprise application.</p>
+<p>It is not a small standalone page. The tested features are loaded inside a host system, and the user flows depend on real routing, login state, permissions, feature flags, backend data, and environment configuration.</p>
+<p>This makes E2E testing more valuable, but also more complicated.</p>
+<p>The test is not only checking whether a button can be clicked. It is checking whether the micro-frontend works correctly inside the real product context.</p>
+<p>Some flows are simple, such as opening a page or clicking a menu item. Some flows are much longer, involving creation, editing, search, upload, download, preview, permission control, and cleanup.</p>
+<p>Because of this, I cannot treat the E2E suite as a group of random scripts. It needs a structure.</p>
+<h2 id="goals">Goals</h2>
+<p>The first goal is broad coverage.</p>
+<p>I want the E2E suite to cover all major modules, not just a few happy paths. Each important feature should have at least one user-facing flow that proves it still works.</p>
+<p>The second goal is to focus on front-end behavior.</p>
+<p>The E2E tests do not need to verify every backend detail. If a function can be validated through the UI result, the test should use the simplest visible signal.</p>
+<p>The third goal is to avoid unnecessary hard waits.</p>
+<p>Using <code>browser.pause</code> is easy, but it makes tests slow and unstable. A better test should wait for a real condition: an element appears, a button becomes clickable, a file exists, a loading state disappears, or a page has finished navigation.</p>
+<p>The fourth goal is to support different runtime conditions.</p>
+<p>The product has old and new service paths, different roles, different feature flags, and different UI states. A useful E2E structure should make these differences manageable instead of duplicating the same test logic everywhere.</p>
+<h2 id="overall-structure">Overall Structure</h2>
+<p>The E2E architecture is organized in layers:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>E2E Test Infrastructure</span></span>
+<span class="line"><span>  -> Base Element</span></span>
+<span class="line"><span>      -> Base Module</span></span>
+<span class="line"><span>          -> Base Page Object</span></span>
+<span class="line"><span>              -> Case</span></span>
+<span class="line"><span>                  -> Case Group</span></span>
+<span class="line"><span>                      -> Spec</span></span></code></pre>
+<p>The idea is simple: lower layers handle browser and DOM details, while upper layers describe business behavior.</p>
+<p>In practice, the directory structure looks like this:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>e2e/</span></span>
+<span class="line"><span>  specs/</span></span>
+<span class="line"><span>  cases/</span></span>
+<span class="line"><span>  pageObject/</span></span>
+<span class="line"><span>  core/</span></span>
+<span class="line"><span>  files/</span></span>
+<span class="line"><span>  constants.ts</span></span>
+<span class="line"><span>  fileUtils.js</span></span>
+<span class="line"><span>  envUtils.js</span></span></code></pre>
+<p>Each folder has a clear responsibility.</p>
+<p><code>specs</code> are the entry points of test suites. They decide which user to use, which page to open, which cases to run, and how to clean up data.</p>
+<p><code>cases</code> contain reusable business steps and assertions.</p>
+<p><code>pageObject</code> contains page-level and module-level operations.</p>
+<p><code>core</code> contains shared logic such as login, logout, and common hooks.</p>
+<p><code>files</code> stores test files used for upload scenarios.</p>
+<p><code>fileUtils</code> handles download directory setup, file existence checks, and temporary file cleanup.</p>
+<p>This structure takes time to build, but it prevents the test suite from becoming a pile of selectors and duplicated browser commands.</p>
+<h2 id="base-element">Base Element</h2>
+<p><code>Base Element</code> is the lowest abstraction above WebDriver.</p>
+<p>It wraps basic DOM operations such as:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>click</span></span>
+<span class="line"><span>hover</span></span>
+<span class="line"><span>getText</span></span>
+<span class="line"><span>getValue</span></span>
+<span class="line"><span>setValue</span></span>
+<span class="line"><span>waitForDisplayed</span></span>
+<span class="line"><span>waitForClickable</span></span>
+<span class="line"><span>scrollIntoView</span></span>
+<span class="line"><span>dragAndDrop</span></span></code></pre>
+<p>The main reason to create this layer is consistency.</p>
+<p>Without this layer, each test may handle waiting differently. One test may click directly. Another may use a pause. Another may wait for display but not for clickable state.</p>
+<p>That inconsistency is a common source of flaky tests.</p>
+<p>By putting common behavior into <code>Base Element</code>, each interaction can follow the same pattern:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> element.</span><span style="color:#B392F0">waitForClickable</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> element.</span><span style="color:#B392F0">click</span><span style="color:#E1E4E8">()</span></span></code></pre>
+<p>This also makes future improvement easier. If we find that a certain type of click is unstable, we can improve it once in the base layer instead of changing dozens of test files.</p>
+<h2 id="base-module">Base Module</h2>
+<p>A page in this project is often too large to model as a single object.</p>
+<p>Many pages contain reusable sections: filters, tables, dialogs, forms, search panels, upload panels, and setting blocks.</p>
+<p>So I use <code>Base Module</code> to describe a reusable part of a page.</p>
+<p>A module usually contains related elements and actions. For example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Search module</span></span>
+<span class="line"><span>Table module</span></span>
+<span class="line"><span>Upload module</span></span>
+<span class="line"><span>Dialog module</span></span>
+<span class="line"><span>Form section module</span></span></code></pre>
+<p>This makes the Page Object smaller and easier to understand.</p>
+<p>Instead of putting every selector into one huge page file, a page can be composed from smaller modules.</p>
+<h2 id="base-page-object">Base Page Object</h2>
+<p><code>Base Page Object</code> represents a real page or a major product area.</p>
+<p>It usually contains:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>launchUrl</span></span>
+<span class="line"><span>credibleElement</span></span>
+<span class="line"><span>visit()</span></span>
+<span class="line"><span>hasLaunched()</span></span>
+<span class="line"><span>hasLeft()</span></span>
+<span class="line"><span>waitUntilPageIsLoaded()</span></span>
+<span class="line"><span>waitForLoading()</span></span>
+<span class="line"><span>waitForAjaxLoading()</span></span></code></pre>
+<p>The most important concept here is <code>credibleElement</code>.</p>
+<p>When a test opens a page, it should not only check the URL. Some pages may share similar routes, or the page may load slowly after navigation.</p>
+<p>A credible element is a stable element that proves the expected page is really loaded.</p>
+<p>For example, after visiting a page, the test should wait until a unique title, table, button, or root container appears.</p>
+<p>This makes the test more reliable than only checking navigation.</p>
+<h2 id="case">Case</h2>
+<p>A <code>Case</code> is a reusable business action or assertion.</p>
+<p>For example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Open page</span></span>
+<span class="line"><span>Click add button</span></span>
+<span class="line"><span>Fill basic information</span></span>
+<span class="line"><span>Save form</span></span>
+<span class="line"><span>Verify table result</span></span>
+<span class="line"><span>Upload file</span></span>
+<span class="line"><span>Download file</span></span>
+<span class="line"><span>Delete created data</span></span></code></pre>
+<p>Each case follows a common lifecycle:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>before()</span></span>
+<span class="line"><span>expect()</span></span>
+<span class="line"><span>after()</span></span>
+<span class="line"><span>test()</span></span></code></pre>
+<p>This structure is useful because many business flows share the same steps.</p>
+<p>Instead of writing the same logic in multiple specs, I can create a case once and reuse it.</p>
+<p>A case is smaller than a full spec, but more meaningful than a raw browser action. It usually represents one step that a real user would understand.</p>
+<p>This layer also makes the test suite easier to expand. When a new flow needs the same behavior, I can compose existing cases instead of starting from zero.</p>
+<h2 id="case-group">Case Group</h2>
+<p>A <code>Case Group</code> combines multiple cases into a complete flow.</p>
+<p>For example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">new</span><span style="color:#B392F0"> BaseCaseGroup</span><span style="color:#E1E4E8">(userId, [</span></span>
+<span class="line"><span style="color:#E1E4E8">  LaunchPage,</span></span>
+<span class="line"><span style="color:#E1E4E8">  CreateItem,</span></span>
+<span class="line"><span style="color:#E1E4E8">  UpdateItem,</span></span>
+<span class="line"><span style="color:#E1E4E8">  SearchItem,</span></span>
+<span class="line"><span style="color:#E1E4E8">  DeleteItem,</span></span>
+<span class="line"><span style="color:#E1E4E8">])</span></span></code></pre>
+<p>This gives the test suite a pipeline-like structure.</p>
+<p>The spec does not need to know every low-level detail. It can focus on the order of business steps.</p>
+<p>This is especially useful for long flows. A full E2E flow may include many actions, but each action can still stay small and reusable.</p>
+<p>The tradeoff is that case order becomes important.</p>
+<p>Some cases depend on data created by previous cases. For this reason, the spec still needs to manage shared state carefully, especially created data names and cleanup logic.</p>
+<h2 id="spec">Spec</h2>
+<p><code>Spec</code> is the orchestration layer.</p>
+<p>A spec usually does the following things:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Choose a test user</span></span>
+<span class="line"><span>Login</span></span>
+<span class="line"><span>Open target page</span></span>
+<span class="line"><span>Create page objects or case groups</span></span>
+<span class="line"><span>Run cases</span></span>
+<span class="line"><span>Record created data</span></span>
+<span class="line"><span>Clean up</span></span>
+<span class="line"><span>Logout</span></span></code></pre>
+<p>This layer should describe the business journey clearly.</p>
+<p>A good spec should be readable without knowing every selector. It should tell the reader what the test is trying to verify.</p>
+<p>For example, instead of writing all interactions directly inside the spec, the spec can say:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Login as a user with specific permission</span></span>
+<span class="line"><span>Open the target module</span></span>
+<span class="line"><span>Create a record</span></span>
+<span class="line"><span>Verify it appears in the list</span></span>
+<span class="line"><span>Update the record</span></span>
+<span class="line"><span>Delete it after the test</span></span></code></pre>
+<p>This makes the test closer to documentation.</p>
+<h2 id="user-matrix">User Matrix</h2>
+<p>One difficult part of this project is that different users may see different behavior.</p>
+<p>The same page can behave differently depending on:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Role</span></span>
+<span class="line"><span>Permission</span></span>
+<span class="line"><span>Feature flag</span></span>
+<span class="line"><span>Data privacy setting</span></span>
+<span class="line"><span>Old or new service path</span></span></code></pre>
+<p>To handle this, I use a user matrix.</p>
+<p>Each test user represents a specific business context. The spec passes a user ID into the test flow, and the case can read the related role, feature status, or permission setting.</p>
+<p>This avoids duplicating the same flow for every user type.</p>
+<p>The benefit is clear: one test flow can be reused under different conditions.</p>
+<p>The cost is also clear: the user matrix must be documented well. Otherwise, IDs like <code>test001</code> or <code>test101</code> are hard to understand for new maintainers.</p>
+<h2 id="file-upload-and-download">File Upload and Download</h2>
+<p>Upload and download flows need special handling.</p>
+<p>For upload, the test needs stable test files. These files should be stored in the repository, under a clear folder such as:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>e2e/files/</span></span></code></pre>
+<p>For download, clicking the button is not enough.</p>
+<p>The test should verify that the expected file actually appears in the download directory.</p>
+<p>The browser download path must be configured, and the test should wait for the file to exist:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Click download button</span></span>
+<span class="line"><span>Wait for file to appear</span></span>
+<span class="line"><span>Fail if timeout is reached</span></span>
+<span class="line"><span>Clean temporary download files</span></span></code></pre>
+<p>This is much better than only checking whether the button is clickable.</p>
+<p>A download function is only useful if the file is really created.</p>
+<h2 id="react-controlled-input-issue">React Controlled Input Issue</h2>
+<p>One issue I met is React controlled input.</p>
+<p>For normal input fields, setting the value directly may look enough. But when the input is controlled by React state, directly changing the DOM value may not update the internal state correctly.</p>
+<p>The safer approach is to behave more like a real user:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Read current value</span></span>
+<span class="line"><span>Clear it with keyboard actions</span></span>
+<span class="line"><span>Type the new value</span></span>
+<span class="line"><span>Trigger the expected input/change events</span></span></code></pre>
+<p>This is slower than direct assignment, but it is more reliable.</p>
+<p>The lesson is that E2E tests should interact with the application through the same path as the user whenever possible.</p>
+<p>If the test only changes the DOM but the framework state is not updated, the test result is not trustworthy.</p>
+<h2 id="dialog-and-legacy-ui-issues">Dialog and Legacy UI Issues</h2>
+<p>Another problem is legacy UI.</p>
+<p>Not every part of the product is built with the same front-end stack. Some dialogs and components still use older patterns.</p>
+<p>This creates special problems for E2E tests:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Dialog not destroyed after close</span></span>
+<span class="line"><span>Hidden elements still exist in DOM</span></span>
+<span class="line"><span>Multiple dialogs share similar selectors</span></span>
+<span class="line"><span>Click event does not behave like a modern component</span></span></code></pre>
+<p>In these cases, improving the test code is not always enough.</p>
+<p>Sometimes the application code also needs small changes, such as adding stable <code>data-testid</code> attributes or making sure dialogs are properly destroyed after closing.</p>
+<p>This is an important point: testability is part of product quality.</p>
+<p>If a UI is hard to test, it is often also hard to reason about.</p>
+<h2 id="waiting-strategy">Waiting Strategy</h2>
+<p>The most dangerous shortcut in E2E testing is fixed waiting.</p>
+<p>For example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> browser.</span><span style="color:#B392F0">pause</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>This may work on a developer machine, but fail in CI or under a slower environment.</p>
+<p>Instead, I try to wait for meaningful conditions:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Element is displayed</span></span>
+<span class="line"><span>Element is clickable</span></span>
+<span class="line"><span>Table row appears</span></span>
+<span class="line"><span>Toast message appears</span></span>
+<span class="line"><span>Loading indicator disappears</span></span>
+<span class="line"><span>URL changes</span></span>
+<span class="line"><span>File exists</span></span>
+<span class="line"><span>Dialog closes</span></span></code></pre>
+<p>This makes the test both faster and more stable.</p>
+<p>The goal is not to wait longer. The goal is to wait for the right thing.</p>
+<h2 id="test-data-and-cleanup">Test Data and Cleanup</h2>
+<p>E2E tests create real data.</p>
+<p>That means cleanup is not optional.</p>
+<p>Each spec needs to know what it creates and how to delete it after the test.</p>
+<p>A common pattern is to use a test-only naming convention:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>auto_{name}</span></span>
+<span class="line"><span>e2e_{timestamp}</span></span>
+<span class="line"><span>test_{runId}</span></span></code></pre>
+<p>This makes cleanup easier and reduces the risk of deleting real data.</p>
+<p>The cleanup logic should run in <code>after</code> hooks, but that is not always enough. If a test fails in the middle, some data may still remain.</p>
+<p>A better approach is to clean old test data before starting a new run, then clean again after the run finishes.</p>
+<p>This makes the test suite more repeatable.</p>
+<h2 id="reports">Reports</h2>
+<p>The test suite outputs both console reports and JUnit XML reports.</p>
+<p>The console report is useful when running tests locally.</p>
+<p>The JUnit report is useful for CI because it can be collected and displayed by the pipeline.</p>
+<p>For E2E tests, reporting is very important. A failed E2E test without enough information is hard to debug.</p>
+<p>At minimum, the report should help answer:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Which spec failed?</span></span>
+<span class="line"><span>Which case failed?</span></span>
+<span class="line"><span>Which user was used?</span></span>
+<span class="line"><span>Which environment was used?</span></span>
+<span class="line"><span>What was the error?</span></span>
+<span class="line"><span>Was the failure caused by assertion, timeout, or setup?</span></span></code></pre>
+<p>Screenshots, videos, and traces would make this even better, but even basic structured reports are already helpful.</p>
+<h2 id="what-works-well">What Works Well</h2>
+<p>The layered structure works well.</p>
+<p>It keeps the test code from becoming too messy and makes business steps reusable.</p>
+<p>The most useful parts are:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Base Element for consistent browser operations</span></span>
+<span class="line"><span>Page Object for page and module behavior</span></span>
+<span class="line"><span>Case for reusable business actions</span></span>
+<span class="line"><span>Case Group for composing long flows</span></span>
+<span class="line"><span>Spec for orchestration and cleanup</span></span></code></pre>
+<p>This structure also makes it easier to onboard new tests. When adding a new flow, I do not need to think from raw selectors immediately. I can first ask:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Is there already a Page Object?</span></span>
+<span class="line"><span>Is there already a module?</span></span>
+<span class="line"><span>Is there already a reusable case?</span></span>
+<span class="line"><span>Can this flow reuse an existing Case Group?</span></span></code></pre>
+<p>That saves time.</p>
+<h2 id="current-problems">Current Problems</h2>
+<p>The biggest problem is still complexity.</p>
+<p>The E2E suite depends on many things:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Browser driver</span></span>
+<span class="line"><span>Target environment</span></span>
+<span class="line"><span>Login user</span></span>
+<span class="line"><span>Permission setting</span></span>
+<span class="line"><span>Feature flag</span></span>
+<span class="line"><span>Backend data</span></span>
+<span class="line"><span>Network speed</span></span>
+<span class="line"><span>File system path</span></span>
+<span class="line"><span>Cleanup result</span></span></code></pre>
+<p>Any one of these can break a test.</p>
+<p>Another problem is hidden dependency between cases.</p>
+<p>A case may assume that another case has already created data or opened a page. This makes the flow flexible, but it also means maintainers must understand the full case group before changing one case.</p>
+<p>The third problem is local setup.</p>
+<p>If the README does not clearly explain environment variables, user data, browser requirements, and single-spec execution, the test suite becomes hard to run for new developers.</p>
+<h2 id="improvements-i-want-to-make">Improvements I Want to Make</h2>
+<p>The first improvement is documentation.</p>
+<p>The E2E README should include:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>How to run all tests</span></span>
+<span class="line"><span>How to run one spec</span></span>
+<span class="line"><span>How to run in local mode</span></span>
+<span class="line"><span>How to prepare user data</span></span>
+<span class="line"><span>How to choose environment</span></span>
+<span class="line"><span>How to debug failed tests</span></span>
+<span class="line"><span>How to clean test data</span></span>
+<span class="line"><span>How download validation works</span></span></code></pre>
+<p>The second improvement is better test data isolation.</p>
+<p>Each run should generate unique data names, preferably with a run ID. Cleanup should be safer and easier to repeat.</p>
+<p>The third improvement is reducing fixed waits.</p>
+<p>Any <code>browser.pause</code> should be reviewed. If it can be replaced by a real condition, it should be replaced.</p>
+<p>The fourth improvement is clearer case metadata.</p>
+<p>A case could declare what it requires and what it creates:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#B392F0">  requiresPage</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'TargetPage'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">  requiresData</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">'createdRecord'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#B392F0">  createsData</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">'uploadedFile'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#B392F0">  cleanup</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>This would make case groups easier to understand.</p>
+<h2 id="summary">Summary</h2>
+<p>This E2E work is much more complex than I expected. It is not only about writing automation scripts. It is about creating a maintainable testing architecture for a real product.</p>
+<p>The most important lessons so far are:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="txt"><code><span class="line"><span>Do not put raw selectors everywhere</span></span>
+<span class="line"><span>Do not rely on fixed pause</span></span>
+<span class="line"><span>Model pages and modules clearly</span></span>
+<span class="line"><span>Make business steps reusable</span></span>
+<span class="line"><span>Treat test data seriously</span></span>
+<span class="line"><span>Clean up after each run</span></span>
+<span class="line"><span>Use real conditions for waiting</span></span>
+<span class="line"><span>Document the local setup</span></span>
+<span class="line"><span>Keep specs readable</span></span></code></pre>
+<p>A good E2E suite should not only tell us whether the product works today.</p>
+<p>It should also help future developers understand how the product is supposed to work.</p>
+<p>That is the real value of this work.</p> </div> </article>  <section aria-label="Comments" class="comments"> <h2 class="comments__title">Comments</h2> <script src="https://giscus.app/client.js" data-repo="Whynotmetoo/whynotmetoo.github.io" data-repo-id="R_kgDOROUm4Q" data-category="Announcements" data-category-id="DIC_kwDOROUm4c4C2Qoo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async></script> </section> </div> </div>  </main> <footer class="site-footer" id="about"> <div class="layout-shell site-footer__grid"> <section class="site-footer__brand"> <a class="site-brand" href="/">Carson Ye</a> <p> Passionate software engineer with 5+ years of experience building scalable web applications. I enjoy sharing practical engineering lessons from building real products.
+</p> <ul class="site-footer__socials"> <li> <a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer" aria-label="GitHub"> <svg viewBox="0 0 24 24" fill="none"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="mailto:hi@carsonye.com" aria-label="Email"> <svg viewBox="0 0 24 24" fill="none"> <path d="M4 6h16v12H4zM4 6l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> </ul> </section> <section> <h2>Navigate</h2> <ul class="site-footer__links"> <li><a href="/">Home</a></li><li><a href="/articles">Articles</a></li><li><a href="/topics">Topics</a></li><li><a href="/about-me">About</a></li> </ul> </section> <section> <h2>Connect</h2> <ul class="site-footer__links"> <li><a href="/about-me">Contact</a></li> <li><a href="/about-me">Resume</a></li> <li><a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer">GitHub</a></li> </ul> </section> </div> <div class="layout-shell site-footer__bottom"> <p>© 2026 Carson Ye. Built with passion and curiosity.</p> </div> </footer> <script>
+      (() => {
+        const toggle = document.querySelector('[data-theme-toggle]');
+        const menuToggle = document.querySelector('[data-mobile-toggle]');
+        const mobileNav = document.querySelector('[data-mobile-nav]');
+        const themeController = window.themeController;
+        const closeMobileNav = () => {
+          if (!mobileNav || !(menuToggle instanceof HTMLButtonElement)) return;
+          mobileNav.setAttribute('hidden', '');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        };
+        const isMobileNavOpen = () =>
+          mobileNav instanceof HTMLElement &&
+          menuToggle instanceof HTMLButtonElement &&
+          !mobileNav.hasAttribute('hidden') &&
+          menuToggle.getAttribute('aria-expanded') === 'true';
+        const syncSystemTheme = () => {
+          if (themeController?.getThemeMode() === 'system') {
+            themeController.applyTheme('system', false);
+          }
+        };
+
+        themeController?.media.addEventListener?.('change', syncSystemTheme);
+        themeController?.media.addListener?.(syncSystemTheme);
+
+        toggle?.addEventListener('click', () => {
+          if (!themeController) return;
+          themeController.applyTheme(themeController.cycleTheme());
+        });
+
+        menuToggle?.addEventListener('click', () => {
+          if (!mobileNav || !(menuToggle instanceof HTMLButtonElement)) return;
+          const hidden = mobileNav.hasAttribute('hidden');
+          if (hidden) {
+            mobileNav.removeAttribute('hidden');
+            menuToggle.setAttribute('aria-expanded', 'true');
+          } else {
+            closeMobileNav();
+          }
+        });
+
+        document.addEventListener('pointerdown', (event) => {
+          if (!isMobileNavOpen()) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (mobileNav?.contains(target) || menuToggle?.contains(target)) return;
+          closeMobileNav();
+        });
+
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (isMobileNavOpen()) {
+              closeMobileNav();
+            }
+          },
+          { passive: true },
+        );
+
+        window.addEventListener(
+          'touchmove',
+          () => {
+            if (isMobileNavOpen()) {
+              closeMobileNav();
+            }
+          },
+          { passive: true },
+        );
+
+        mobileNav?.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            closeMobileNav();
+          });
+        });
+      })();
+    </script> </body> </html>
