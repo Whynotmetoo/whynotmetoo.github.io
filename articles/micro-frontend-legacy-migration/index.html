@@ -1,0 +1,263 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preload" href="/fonts/bricolage-grotesque-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/bricolage-grotesque-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><title>Building a Modern Micro-Frontend Architecture on Top of Legacy Systems | Carson Ye</title><meta name="description" content="A practical architecture note on introducing a micro-frontend shell, runtime composition, shared context, and compatibility bridges while keeping legacy pages alive."><meta name="author" content="Carson Ye"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="keywords" content="microfrontend, architecture, module federation"><link rel="canonical" href="https://carsonye.com/articles/micro-frontend-legacy-migration/"><link rel="icon" type="image/svg+xml" href="/favicon/favicon-light.svg" data-site-favicon><link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"><link rel="manifest" href="/favicon/site.webmanifest"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="article"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Carson Ye"><meta property="og:title" content="Building a Modern Micro-Frontend Architecture on Top of Legacy Systems | Carson Ye"><meta property="og:description" content="A practical architecture note on introducing a micro-frontend shell, runtime composition, shared context, and compatibility bridges while keeping legacy pages alive."><meta property="og:url" content="https://carsonye.com/articles/micro-frontend-legacy-migration/"><meta property="og:image" content="https://carsonye.com/og-default.png"><meta property="og:image:secure_url" content="https://carsonye.com/og-default.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Building a Modern Micro-Frontend Architecture on Top of Legacy Systems"><meta property="article:published_time" content="2022-08-05T00:00:00.000Z"><meta property="article:modified_time" content="2022-08-05T00:00:00.000Z"><meta property="article:author" content="Carson Ye"><meta property="article:section" content="microfrontend"><meta property="article:tag" content="microfrontend"><meta property="article:tag" content="architecture"><meta property="article:tag" content="module federation"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Building a Modern Micro-Frontend Architecture on Top of Legacy Systems | Carson Ye"><meta name="twitter:description" content="A practical architecture note on introducing a micro-frontend shell, runtime composition, shared context, and compatibility bridges while keeping legacy pages alive."><meta name="twitter:image" content="https://carsonye.com/og-default.png"><meta name="twitter:image:alt" content="Building a Modern Micro-Frontend Architecture on Top of Legacy Systems"><meta name="twitter:creator" content="@_carsonye_"><meta name="twitter:site" content="@_carsonye_"><link rel="alternate" type="application/rss+xml" title="Carson Ye RSS" href="/rss.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://carsonye.com/#website","url":"https://carsonye.com","name":"Carson Ye","description":"Engineering, systems, and thoughtful design.","inLanguage":"en-US","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"}},{"@type":"Organization","@id":"https://carsonye.com/#organization","name":"Carson Ye","url":"https://carsonye.com","logo":{"@type":"ImageObject","url":"https://carsonye.com/favicon/apple-touch-icon.png"},"sameAs":["https://github.com/Whynotmetoo","https://x.com/_carsonye_"]},{"@type":"Person","@id":"https://carsonye.com/#person","name":"Carson Ye","url":"https://carsonye.com","image":"https://carsonye.com/profile/profile.jpg","description":"I build reliable web systems and write about architecture, product trade-offs, and engineering practice.","jobTitle":"Software Engineer","homeLocation":{"@type":"Place","name":"Toronto, ON, Canada"},"email":"mailto:hi@carsonye.com","sameAs":["https://github.com/Whynotmetoo","https://x.com/_carsonye_"],"worksFor":{"@id":"https://carsonye.com/#organization"}},{"@type":"WebPage","@id":"https://carsonye.com/articles/micro-frontend-legacy-migration/#webpage","url":"https://carsonye.com/articles/micro-frontend-legacy-migration/","name":"Building a Modern Micro-Frontend Architecture on Top of Legacy Systems | Carson Ye","description":"A practical architecture note on introducing a micro-frontend shell, runtime composition, shared context, and compatibility bridges while keeping legacy pages alive.","inLanguage":"en-US","isPartOf":{"@id":"https://carsonye.com/#website"},"about":{"@id":"https://carsonye.com/#person"},"datePublished":"2022-08-05T00:00:00.000Z","dateModified":"2022-08-05T00:00:00.000Z","keywords":"microfrontend, architecture, module federation","primaryImageOfPage":{"@type":"ImageObject","url":"https://carsonye.com/og-default.png"}},{"@type":"BlogPosting","@id":"https://carsonye.com/articles/micro-frontend-legacy-migration/#article","headline":"Building a Modern Micro-Frontend Architecture on Top of Legacy Systems","description":"A practical architecture note on introducing a micro-frontend shell, runtime composition, shared context, and compatibility bridges while keeping legacy pages alive.","url":"https://carsonye.com/articles/micro-frontend-legacy-migration/","mainEntityOfPage":{"@id":"https://carsonye.com/articles/micro-frontend-legacy-migration/#webpage"},"image":["https://carsonye.com/og-default.png"],"datePublished":"2022-08-05T00:00:00.000Z","dateModified":"2022-08-05T00:00:00.000Z","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"},"articleSection":"Microfrontend","keywords":"microfrontend, architecture, module federation","wordCount":1569,"inLanguage":"en-US","isAccessibleForFree":true}]}</script><script data-goatcounter="https://carsonye.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script data-giscus-theme="{&#34;light&#34;:&#34;light&#34;,&#34;dark&#34;:&#34;transparent_dark&#34;}">
+      (() => {
+        const currentScript = document.currentScript;
+        const storageKey = 'theme';
+        const root = document.documentElement;
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const favicon = document.querySelector('[data-site-favicon]');
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const faviconHref = {
+          light: '/favicon/favicon-light.svg',
+          dark: '/favicon/favicon-dark.svg',
+        };
+        const themeColorValue = {
+          light: '#ffffff',
+          dark: '#0f172a',
+        };
+        const giscusThemeValue =
+          currentScript instanceof HTMLScriptElement ? JSON.parse(currentScript.dataset.giscusTheme ?? '{}') : {};
+
+        const readStoredTheme = () => {
+          try {
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'light' || saved === 'dark' || saved === 'system') {
+              return saved;
+            }
+          } catch {}
+
+          return 'system';
+        };
+
+        const persistTheme = (mode) => {
+          try {
+            localStorage.setItem(storageKey, mode);
+          } catch {}
+        };
+
+        const resolveTheme = (mode) => (
+          mode === 'dark' || (mode === 'system' && media.matches) ? 'dark' : 'light'
+        );
+
+        const syncGiscusTheme = (resolvedTheme) => {
+          const frame = document.querySelector('iframe.giscus-frame');
+          if (!(frame instanceof HTMLIFrameElement) || !frame.contentWindow) {
+            return false;
+          }
+
+          frame.contentWindow.postMessage(
+            {
+              giscus: {
+                setConfig: {
+                  theme: giscusThemeValue[resolvedTheme] ?? giscusThemeValue.light,
+                },
+              },
+            },
+            'https://giscus.app',
+          );
+
+          return true;
+        };
+
+        const applyTheme = (mode, persist = true) => {
+          const nextMode = mode === 'light' || mode === 'dark' || mode === 'system' ? mode : 'system';
+          const resolvedTheme = resolveTheme(nextMode);
+
+          root.classList.toggle('dark', resolvedTheme === 'dark');
+          root.dataset.themeMode = nextMode;
+          root.dataset.themeResolved = resolvedTheme;
+
+          if (favicon instanceof HTMLLinkElement) {
+            favicon.href = faviconHref[resolvedTheme];
+          }
+
+          if (themeColor instanceof HTMLMetaElement) {
+            themeColor.content = themeColorValue[resolvedTheme];
+          }
+
+          syncGiscusTheme(resolvedTheme);
+
+          if (persist) {
+            persistTheme(nextMode);
+          }
+
+          return nextMode;
+        };
+
+        const cycleTheme = () => {
+          const current = root.dataset.themeMode || 'system';
+          if (current === 'light') return 'dark';
+          if (current === 'dark') return 'system';
+          return 'light';
+        };
+
+        window.themeController = {
+          applyTheme,
+          cycleTheme,
+          getResolvedTheme: () => root.dataset.themeResolved || resolveTheme(readStoredTheme()),
+          getThemeMode: () => root.dataset.themeMode || readStoredTheme(),
+          media,
+          syncGiscusTheme: () => syncGiscusTheme(root.dataset.themeResolved || resolveTheme(readStoredTheme())),
+        };
+
+        applyTheme(readStoredTheme(), false);
+      })();
+    </script><link rel="stylesheet" href="/_astro/about-me.CbNzs0iT.css"></head> <body> <header class="site-header"> <div class="layout-shell site-header__row"> <a class="site-brand" href="/">Carson Ye</a> <nav class="site-nav" aria-label="Primary"> <ul class="site-nav__list"> <li class="site-nav__item"> <a class="site-nav__link" href="/"> Home </a> </li><li class="site-nav__item"> <a class="site-nav__link site-nav__link--active" href="/articles" aria-current="page"> Articles </a> </li><li class="site-nav__item"> <a class="site-nav__link" href="/topics"> Topics </a> </li><li class="site-nav__item"> <a class="site-nav__link" href="https://lab.carsonye.com/"> Lab </a> </li><li class="site-nav__item"> <a class="site-nav__link" href="/about-me"> About </a> </li> </ul> </nav> <div class="site-header__actions"> <a href="/search" class="icon-button" aria-label="Search articles"> <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> <button type="button" class="icon-button theme-toggle" data-theme-toggle aria-label="Toggle theme"> <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle> <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--system" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"></rect> <path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> <button type="button" class="icon-button mobile-nav-toggle" data-mobile-toggle aria-expanded="false" aria-label="Toggle menu"> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--menu" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--close" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> </div> </div> <nav class="mobile-nav layout-shell" data-mobile-nav hidden aria-label="Mobile"> <ul class="mobile-nav__list"> <li class="mobile-nav__item"> <a class="mobile-nav__link" href="/"> Home </a> </li><li class="mobile-nav__item"> <a class="mobile-nav__link mobile-nav__link--active" href="/articles" aria-current="page"> Articles </a> </li><li class="mobile-nav__item"> <a class="mobile-nav__link" href="/topics"> Topics </a> </li><li class="mobile-nav__item"> <a class="mobile-nav__link" href="https://lab.carsonye.com/"> Lab </a> </li><li class="mobile-nav__item"> <a class="mobile-nav__link" href="/about-me"> About </a> </li> </ul> </nav> </header> <main class="site-main layout-shell">  <div class="article-layout"> <aside class="article-outline" aria-label="Article outline"> <div class="article-outline__panel"> <p class="article-outline__title">Outline</p> <ol class="article-outline__list"> <li class="article-outline__item"> <a href="#context-a-frontend-that-grew-in-layers" class="article-outline__link" style="--outline-depth:0;" title="Context: a frontend that grew in layers"> Context: a frontend that grew in layers </a> </li><li class="article-outline__item"> <a href="#goal" class="article-outline__link" style="--outline-depth:0;" title="Goal"> Goal </a> </li><li class="article-outline__item"> <a href="#architecture-overview" class="article-outline__link" style="--outline-depth:0;" title="Architecture overview"> Architecture overview </a> </li><li class="article-outline__item"> <a href="#runtime-loading-with-module-federation" class="article-outline__link" style="--outline-depth:0;" title="Runtime loading with Module Federation"> Runtime loading with Module Federation </a> </li><li class="article-outline__item"> <a href="#the-shell-owns-cross-cutting-concerns" class="article-outline__link" style="--outline-depth:0;" title="The shell owns cross-cutting concerns"> The shell owns cross-cutting concerns </a> </li><li class="article-outline__item"> <a href="#domain-remotes-as-capability-packages" class="article-outline__link" style="--outline-depth:0;" title="Domain remotes as capability packages"> Domain remotes as capability packages </a> </li><li class="article-outline__item"> <a href="#compatibility-with-legacy-pages" class="article-outline__link" style="--outline-depth:0;" title="Compatibility with legacy pages"> Compatibility with legacy pages </a> </li><li class="article-outline__item"> <a href="#api-boundaries-and-version-compatibility" class="article-outline__link" style="--outline-depth:0;" title="API boundaries and version compatibility"> API boundaries and version compatibility </a> </li><li class="article-outline__item"> <a href="#trade-offs" class="article-outline__link" style="--outline-depth:0;" title="Trade-offs"> Trade-offs </a> </li><li class="article-outline__item"> <a href="#conclusion" class="article-outline__link" style="--outline-depth:0;" title="Conclusion"> Conclusion </a> </li> </ol> </div> </aside> <div class="article-layout__main"> <article class="article-detail"> <nav class="breadcrumbs" aria-label="Breadcrumb"><ol class="breadcrumbs__list"><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/articles">Articles</a></li><li class="breadcrumbs__item"><span class="breadcrumbs__current" aria-current="page">Building a Modern Micro-Frontend Architecture on Top of Legacy Systems</span></li></ol></nav><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://carsonye.com/articles"},{"@type":"ListItem","position":2,"name":"Building a Modern Micro-Frontend Architecture on Top of Legacy Systems","item":"https://carsonye.com/articles/micro-frontend-legacy-migration/"}]}</script> <header class="article-detail__header"> <h1>Building a Modern Micro-Frontend Architecture on Top of Legacy Systems</h1> <p class="meta">Published August 5, 2022</p>  <ul class="tag-list" aria-label="Tags"> <li class="tag-list__item"><a class="tag-list__link" href="/tags/microfrontend/">#microfrontend</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/architecture/">#architecture</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/module-federation/">#module federation</a></li> </ul> </header> <div class="article-detail__body"> <p>Before building a micro-frontend architecture, I used to think the main challenge would be splitting pages into smaller applications. After working inside a large portal shaped by years of legacy code, new React modules, global utilities, old loaders, and several backend integration styles, the problem felt less like “splitting pages” and more like building a safe migration path through a mountain.</p>
+<p>The real question was not: how do we rewrite everything into a modern stack?</p>
+<p>The real question was: how do we create a modern frontend platform while old pages, old URLs, old global objects, old permissions, and old integration points continue to work?</p>
+<p>This article summarizes one practical approach: using a micro-frontend shell as the new composition layer, exposing business domains as remotes, and building compatibility adapters so legacy pages can gradually consume the new system without forcing a full rewrite.</p>
+<h2 id="context-a-frontend-that-grew-in-layers">Context: a frontend that grew in layers</h2>
+<p>In many long-lived enterprise applications, the frontend is not one application. It is a timeline.</p>
+<p>The oldest layer may be a server-backed portal with static assets, jQuery utilities, a legacy module loader, Backbone-style views, and global request helpers. Later, React islands are added into existing DOM containers. Then remote manifest loading appears, allowing selected React components to be loaded from external bundles. Eventually, a modern micro-frontend shell is introduced, using Webpack 5 Module Federation to load independently deployed domain modules at runtime.</p>
+<p>None of these layers fully disappear on day one. They overlap. That overlap is where most of the real engineering work lives. A clean architecture diagram may show one shell and several remotes, but production reality often includes multiple module systems, routing models, and request wrappers running side by side.</p>
+<h2 id="goal">Goal</h2>
+<p>The goal of the architecture was not to make the codebase look modern from the outside. The goal was to establish a new default path for future development while preserving existing behavior.</p>
+<p>That means the new architecture needed four parts: a shell that owns bootstrapping, global context, routing, permissions, feature flags, and runtime loading; domain remotes that expose routes, menus, components, and utility modules; shared runtime capabilities such as request handling, localization, user context, and common UI packages; and legacy bridges that allow old pages to load new modules through existing entry points.</p>
+<p>The last point is easy to underestimate. Without compatibility bridges, every legacy page becomes a blocker. With bridges, migration can happen feature by feature.</p>
+<h2 id="architecture-overview">Architecture overview</h2>
+<p><img src="/images/micro-frontend-migration-architecture.svg" alt="Modern micro-frontend migration architecture"></p>
+<p>At the center is the micro-frontend shell. It bootstraps the application before rendering the actual UI. During startup, it fetches global data such as user information, organization context, permissions, feature flags, product configuration, and menu definitions. This data is placed into a shared global provider so remote modules do not need to independently rebuild the same infrastructure.</p>
+<p>The shell also owns route and menu composition. Instead of hardcoding every page in the shell repository, each domain remote can expose a menu configuration and a route module. The shell loads these modules dynamically, filters them based on permissions and flags, and contributes them to the final navigation structure.</p>
+<p>This turns the shell into a platform boundary. It does not need to know the internal implementation of every domain. It only needs to know how to locate the remote entry, initialize the shared scope, and request the exposed module.</p>
+<h2 id="runtime-loading-with-module-federation">Runtime loading with Module Federation</h2>
+<p>The most important runtime mechanism is dynamic remote loading.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>shell asks for "domain/menuConfigs"</span></span>
+<span class="line"><span>  -> resolve domain name to remote entry URL</span></span>
+<span class="line"><span>  -> inject remoteEntry.js</span></span>
+<span class="line"><span>  -> initialize shared dependency scope</span></span>
+<span class="line"><span>  -> get exposed module from the remote container</span></span>
+<span class="line"><span>  -> render returned routes, menus, or components</span></span></code></pre>
+<p>This is different from a traditional monolithic build. The shell and the domain remote can be built separately. The shell does not need the remote’s source code at build time. It only depends on the runtime contract: remote name, remote entry URL, exposed module path, and shared dependencies.</p>
+<p>That contract is powerful, but it needs discipline. Shared dependencies such as React, UI libraries, localization utilities, and global context packages should be centrally managed. Otherwise, each remote may bring its own duplicate runtime, creating larger bundles or subtle bugs when multiple React instances or incompatible shared packages are loaded on the same page.</p>
+<h2 id="the-shell-owns-cross-cutting-concerns">The shell owns cross-cutting concerns</h2>
+<p>One mistake in micro-frontend projects is allowing every remote to become a mini-application with its own authentication logic, permission fetching, API client, locale setup, and error handling. That creates independence on paper, but duplication in practice.</p>
+<p>A better approach is to let the shell own cross-cutting concerns. The shell fetches the boot data once, creates a request wrapper with required headers and common error handling, initializes localization and date/time utilities, exposes permission and feature-flag state, and provides a common global context that remotes can consume.</p>
+<p>This keeps domain remotes focused on business UI and domain-specific state. They still own their screens, workflows, and API modules, but they do not need to rediscover who the user is, which organization is active, or how global alerts should be displayed.</p>
+<h2 id="domain-remotes-as-capability-packages">Domain remotes as capability packages</h2>
+<p>A useful mental model is to treat each remote not as a complete SPA, but as a capability package.</p>
+<p>A domain remote may expose menu configuration, route configuration, page components, reusable widgets, search components, integration modules for legacy pages, version metadata, and domain-specific providers.</p>
+<p>This model is especially useful during migration. A remote can serve the new shell and the legacy portal at the same time. The new shell may load its route module. A legacy page may load one exposed widget. Another old module may use a bridge function to resolve static asset paths or localization messages.</p>
+<p>In other words, the remote is not only a page. It is a runtime boundary for a domain.</p>
+<h2 id="compatibility-with-legacy-pages">Compatibility with legacy pages</h2>
+<p>The most interesting part of this architecture is the legacy bridge.</p>
+<p>The old portal already has its own assumptions: static asset paths, a legacy module loader, global AJAX helpers, global session variables, global CSRF tokens, and existing URL patterns. Rewriting all pages before introducing micro frontends would be unrealistic.</p>
+<p>Instead, the compatibility layer intercepts selected legacy loading paths and redirects them to the new runtime when possible. For example, an old page may still call a legacy module path. The loader can detect that the path belongs to a migrated domain, call the micro-frontend runtime, load a bridge module from the corresponding remote, and let that bridge decide whether to resolve the request to a new remote asset or fall back to the original static asset.</p>
+<p>This gives the team a controlled migration switch. The old call site can remain stable, while the implementation behind it moves gradually. Intermediate patterns, such as remote manifest loading and global mount functions, should also be documented rather than ignored. They explain why certain pages behave differently from the modern shell path.</p>
+<h2 id="api-boundaries-and-version-compatibility">API boundaries and version compatibility</h2>
+<p>Frontend migration often mirrors backend migration. A domain remote may still call legacy endpoints for some workflows while using newer service or proxy endpoints for others. That is normal during a transition.</p>
+<p>The key is to make the boundary explicit. The shell should provide the request foundation, but domain remotes should keep their domain API modules close to their own code. When a domain begins depending on a newer backend service, that dependency should be visible in the remote’s API layer.</p>
+<p>Version compatibility also matters. If a remote depends on backend behavior that varies by environment, tenant, or service version, the frontend loader may need a version mapping mechanism. In that model, the shell does not blindly load the latest remote. It resolves the correct remote version based on backend compatibility metadata.</p>
+<p>This adds release complexity, but it prevents a worse problem: a new frontend silently loading against an incompatible backend.</p>
+<h2 id="trade-offs">Trade-offs</h2>
+<p>This architecture is not free. It introduces more runtime moving parts: remote entries, shared scopes, version maps, feature flags, and compatibility adapters. Debugging can be harder because one user flow may cross the shell, a remote, a legacy loader, and a backend proxy. Local development also needs good proxy configuration, otherwise engineers spend too much time reproducing production loading behavior.</p>
+<p>The benefit is that migration becomes incremental. New domains can be built with a modern toolchain. Existing pages can keep running. Shared platform capabilities become more consistent. Teams can move one route, one component, or one integration point at a time.</p>
+<p>For a small product, this would probably be over-engineering. For a large application with years of accumulated frontend layers, it can be a practical way to create forward motion without pretending the legacy system does not exist.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>A successful micro-frontend migration is not only about Module Federation. Module Federation solves the runtime composition problem, but the broader architecture must also solve bootstrapping, shared context, permission-aware routing, dependency sharing, legacy interoperability, and version compatibility.</p>
+<p>The most useful principle is to avoid treating legacy code as an enemy. Legacy code is part of the production contract. The job of the new architecture is to create a path where modern modules can grow around that contract, replace pieces of it over time, and eventually make the old paths less important.</p>
+<p>That is the real value of a micro-frontend shell: it becomes the new center of gravity, while compatibility bridges keep the system stable during the long migration from old code to new code.</p> </div> </article> <section class="related-articles" aria-labelledby="related-articles-title"> <div class="related-articles__header"> <p class="related-articles__eyebrow">Keep Reading</p> <h2 id="related-articles-title">Related articles</h2> </div> <ul class="related-articles__list"> <li class="related-articles__item"> <article> <p class="related-articles__meta"> Oct 13, 2025 </p> <h3> <a href="/articles/loading-large-scale-point-data-on-web-map/">Loading Large-Scale Point Data on Web Maps</a> </h3> <p>An architecture comparison of server-rendered raster overlays and viewport-based vector loading for large-scale point data on web maps.</p> <p class="related-articles__tags">
+Related via #architecture </p> </article> </li> </ul> </section> <section aria-label="Comments" class="comments"> <h2 class="comments__title">Comments</h2>  <div class="giscus"></div> <script>(() => {
+            const attributes = {"data-repo":"Whynotmetoo/whynotmetoo.github.io","data-repo-id":"R_kgDOROUm4Q","data-category":"Announcements","data-category-id":"DIC_kwDOROUm4c4C2Qoo","data-mapping":"pathname","data-strict":"0","data-reactions-enabled":"1","data-emit-metadata":"0","data-input-position":"bottom","data-lang":"en"};
+            const themes = {"light":"light","dark":"transparent_dark"};
+            const resolvedTheme = document.documentElement.dataset.themeResolved === 'dark' ? 'dark' : 'light';
+            const theme = themes[resolvedTheme] ?? themes.light;
+            const script = document.createElement('script');
+
+            script.src = 'https://giscus.app/client.js';
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+
+            for (const [name, value] of Object.entries({ ...attributes, 'data-theme': theme })) {
+              script.setAttribute(name, value);
+            }
+
+            document.currentScript?.after(script);
+          })();</script>  </section> </div> </div>  </main> <footer class="site-footer" id="about"> <div class="layout-shell site-footer__grid"> <section class="site-footer__brand"> <a class="site-brand" href="/">Carson Ye</a> <p> I build reliable web systems and write about architecture, product trade-offs, and engineering practice. I enjoy sharing practical engineering lessons from building real products.
+</p> <ul class="site-footer__socials"> <li> <a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer" aria-label="GitHub"> <svg viewBox="0 0 24 24" fill="none"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="https://x.com/_carsonye_" target="_blank" rel="noopener noreferrer" aria-label="X"> <svg viewBox="0 0 24 24" fill="currentColor"> <path d="M18.9 2.8h3.4l-7.5 8.6 8.8 11.7h-6.9l-5.4-7.1-6.2 7.1H1.7l8-9.2L1.2 2.8h7.1l4.9 6.5 5.7-6.5Zm-1.2 18.2h1.9L7.3 4.7h-2l12.4 16.3Z"></path> </svg> </a> </li> <li> <a href="mailto:hi@carsonye.com" aria-label="Email"> <svg viewBox="0 0 24 24" fill="none"> <path d="M4 6h16v12H4zM4 6l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> </ul> </section> <section> <h2>Navigate</h2> <ul class="site-footer__links"> <li><a href="/">Home</a></li><li><a href="/articles">Articles</a></li><li><a href="/topics">Topics</a></li><li><a href="https://lab.carsonye.com/">Lab</a></li><li><a href="/about-me">About</a></li> </ul> </section> <section> <h2>Connect</h2> <ul class="site-footer__links"> <li><a href="/about-me">Contact</a></li> <li><a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer">GitHub</a></li> <li><a href="https://x.com/_carsonye_" target="_blank" rel="noopener noreferrer">X</a></li> </ul> </section> </div> <div class="layout-shell site-footer__bottom"> <p>© 2026 Carson Ye. Built with passion and curiosity.</p> </div> </footer> <script>
+      (() => {
+        const toggle = document.querySelector('[data-theme-toggle]');
+        const menuToggle = document.querySelector('[data-mobile-toggle]');
+        const mobileNav = document.querySelector('[data-mobile-nav]');
+        const themeController = window.themeController;
+        const closeMobileNav = () => {
+          if (!mobileNav || !(menuToggle instanceof HTMLButtonElement)) return;
+          mobileNav.setAttribute('hidden', '');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        };
+        const isMobileNavOpen = () =>
+          mobileNav instanceof HTMLElement &&
+          menuToggle instanceof HTMLButtonElement &&
+          !mobileNav.hasAttribute('hidden') &&
+          menuToggle.getAttribute('aria-expanded') === 'true';
+        const syncSystemTheme = () => {
+          if (themeController?.getThemeMode() === 'system') {
+            themeController.applyTheme('system', false);
+          }
+        };
+
+        themeController?.media.addEventListener?.('change', syncSystemTheme);
+        themeController?.media.addListener?.(syncSystemTheme);
+
+        if (themeController) {
+          const syncLoadedGiscus = () => themeController.syncGiscusTheme();
+          const giscusObserver = new MutationObserver(() => {
+            if (syncLoadedGiscus()) {
+              giscusObserver.disconnect();
+            }
+          });
+
+          if (!syncLoadedGiscus()) {
+            giscusObserver.observe(document.body, { childList: true, subtree: true });
+          }
+        }
+
+        toggle?.addEventListener('click', () => {
+          if (!themeController) return;
+          themeController.applyTheme(themeController.cycleTheme());
+        });
+
+        menuToggle?.addEventListener('click', () => {
+          if (!mobileNav || !(menuToggle instanceof HTMLButtonElement)) return;
+          const hidden = mobileNav.hasAttribute('hidden');
+          if (hidden) {
+            mobileNav.removeAttribute('hidden');
+            menuToggle.setAttribute('aria-expanded', 'true');
+          } else {
+            closeMobileNav();
+          }
+        });
+
+        document.addEventListener('pointerdown', (event) => {
+          if (!isMobileNavOpen()) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (mobileNav?.contains(target) || menuToggle?.contains(target)) return;
+          closeMobileNav();
+        });
+
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (isMobileNavOpen()) {
+              closeMobileNav();
+            }
+          },
+          { passive: true },
+        );
+
+        window.addEventListener(
+          'touchmove',
+          () => {
+            if (isMobileNavOpen()) {
+              closeMobileNav();
+            }
+          },
+          { passive: true },
+        );
+
+        mobileNav?.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            closeMobileNav();
+          });
+        });
+      })();
+    </script> </body> </html>
