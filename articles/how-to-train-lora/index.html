@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preload" href="/fonts/bricolage-grotesque-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/bricolage-grotesque-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin><title>Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA | Carson Ye</title><meta name="description" content="A concise note about building a local AI portrait generator that separates identity preservation, image generation, and style control."><meta name="author" content="Carson Ye"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="keywords" content="lora, stable diffusion, ip-adapter, Image Generation"><link rel="canonical" href="https://carsonye.com/articles/how-to-train-lora/"><link rel="icon" type="image/svg+xml" href="/favicon/favicon-light.svg" data-site-favicon><link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"><link rel="manifest" href="/favicon/site.webmanifest"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="article"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Carson Ye"><meta property="og:title" content="Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA | Carson Ye"><meta property="og:description" content="A concise note about building a local AI portrait generator that separates identity preservation, image generation, and style control."><meta property="og:url" content="https://carsonye.com/articles/how-to-train-lora/"><meta property="og:image" content="https://carsonye.com/og-default.png"><meta property="og:image:secure_url" content="https://carsonye.com/og-default.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA"><meta property="article:published_time" content="2025-06-25T00:00:00.000Z"><meta property="article:modified_time" content="2025-06-25T00:00:00.000Z"><meta property="article:author" content="Carson Ye"><meta property="article:section" content="lora"><meta property="article:tag" content="lora"><meta property="article:tag" content="stable diffusion"><meta property="article:tag" content="ip-adapter"><meta property="article:tag" content="Image Generation"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA | Carson Ye"><meta name="twitter:description" content="A concise note about building a local AI portrait generator that separates identity preservation, image generation, and style control."><meta name="twitter:image" content="https://carsonye.com/og-default.png"><meta name="twitter:image:alt" content="Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA"><meta name="twitter:creator" content="@_carsonye_"><meta name="twitter:site" content="@_carsonye_"><link rel="alternate" type="application/rss+xml" title="Carson Ye RSS" href="/rss.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://carsonye.com/#website","url":"https://carsonye.com","name":"Carson Ye","description":"Engineering, systems, and thoughtful design.","inLanguage":"en-US","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"}},{"@type":"Organization","@id":"https://carsonye.com/#organization","name":"Carson Ye","url":"https://carsonye.com","logo":{"@type":"ImageObject","url":"https://carsonye.com/favicon/apple-touch-icon.png"},"sameAs":["https://github.com/Whynotmetoo","https://x.com/_carsonye_"]},{"@type":"Person","@id":"https://carsonye.com/#person","name":"Carson Ye","url":"https://carsonye.com","image":"https://carsonye.com/profile/profile.jpg","description":"I build reliable web systems and write about architecture, product trade-offs, and engineering practice.","jobTitle":"Software Engineer","homeLocation":{"@type":"Place","name":"Toronto, ON, Canada"},"email":"mailto:hi@carsonye.com","sameAs":["https://github.com/Whynotmetoo","https://x.com/_carsonye_"],"worksFor":{"@id":"https://carsonye.com/#organization"}},{"@type":"WebPage","@id":"https://carsonye.com/articles/how-to-train-lora/#webpage","url":"https://carsonye.com/articles/how-to-train-lora/","name":"Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA | Carson Ye","description":"A concise note about building a local AI portrait generator that separates identity preservation, image generation, and style control.","inLanguage":"en-US","isPartOf":{"@id":"https://carsonye.com/#website"},"about":{"@id":"https://carsonye.com/#person"},"datePublished":"2025-06-25T00:00:00.000Z","dateModified":"2025-06-25T00:00:00.000Z","keywords":"lora, stable diffusion, ip-adapter, Image Generation","primaryImageOfPage":{"@type":"ImageObject","url":"https://carsonye.com/og-default.png"}},{"@type":"BlogPosting","@id":"https://carsonye.com/articles/how-to-train-lora/#article","headline":"Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA","description":"A concise note about building a local AI portrait generator that separates identity preservation, image generation, and style control.","url":"https://carsonye.com/articles/how-to-train-lora/","mainEntityOfPage":{"@id":"https://carsonye.com/articles/how-to-train-lora/#webpage"},"image":["https://carsonye.com/og-default.png"],"datePublished":"2025-06-25T00:00:00.000Z","dateModified":"2025-06-25T00:00:00.000Z","author":{"@id":"https://carsonye.com/#person"},"publisher":{"@id":"https://carsonye.com/#organization"},"articleSection":"Lora","keywords":"lora, stable diffusion, ip-adapter, Image Generation","wordCount":1287,"inLanguage":"en-US","isAccessibleForFree":true}]}</script><script data-goatcounter="https://carsonye.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><script data-giscus-theme="{&#34;light&#34;:&#34;light&#34;,&#34;dark&#34;:&#34;transparent_dark&#34;}">
+      (() => {
+        const currentScript = document.currentScript;
+        const storageKey = 'theme';
+        const root = document.documentElement;
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const favicon = document.querySelector('[data-site-favicon]');
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const faviconHref = {
+          light: '/favicon/favicon-light.svg',
+          dark: '/favicon/favicon-dark.svg',
+        };
+        const themeColorValue = {
+          light: '#ffffff',
+          dark: '#0f172a',
+        };
+        const giscusThemeValue =
+          currentScript instanceof HTMLScriptElement ? JSON.parse(currentScript.dataset.giscusTheme ?? '{}') : {};
+
+        const readStoredTheme = () => {
+          try {
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'light' || saved === 'dark' || saved === 'system') {
+              return saved;
+            }
+          } catch {}
+
+          return 'system';
+        };
+
+        const persistTheme = (mode) => {
+          try {
+            localStorage.setItem(storageKey, mode);
+          } catch {}
+        };
+
+        const resolveTheme = (mode) => (
+          mode === 'dark' || (mode === 'system' && media.matches) ? 'dark' : 'light'
+        );
+
+        const syncGiscusTheme = (resolvedTheme) => {
+          const frame = document.querySelector('iframe.giscus-frame');
+          if (!(frame instanceof HTMLIFrameElement) || !frame.contentWindow) {
+            return false;
+          }
+
+          frame.contentWindow.postMessage(
+            {
+              giscus: {
+                setConfig: {
+                  theme: giscusThemeValue[resolvedTheme] ?? giscusThemeValue.light,
+                },
+              },
+            },
+            'https://giscus.app',
+          );
+
+          return true;
+        };
+
+        const applyTheme = (mode, persist = true) => {
+          const nextMode = mode === 'light' || mode === 'dark' || mode === 'system' ? mode : 'system';
+          const resolvedTheme = resolveTheme(nextMode);
+
+          root.classList.toggle('dark', resolvedTheme === 'dark');
+          root.dataset.themeMode = nextMode;
+          root.dataset.themeResolved = resolvedTheme;
+
+          if (favicon instanceof HTMLLinkElement) {
+            favicon.href = faviconHref[resolvedTheme];
+          }
+
+          if (themeColor instanceof HTMLMetaElement) {
+            themeColor.content = themeColorValue[resolvedTheme];
+          }
+
+          syncGiscusTheme(resolvedTheme);
+
+          if (persist) {
+            persistTheme(nextMode);
+          }
+
+          return nextMode;
+        };
+
+        const cycleTheme = () => {
+          const current = root.dataset.themeMode || 'system';
+          if (current === 'light') return 'dark';
+          if (current === 'dark') return 'system';
+          return 'light';
+        };
+
+        window.themeController = {
+          applyTheme,
+          cycleTheme,
+          getResolvedTheme: () => root.dataset.themeResolved || resolveTheme(readStoredTheme()),
+          getThemeMode: () => root.dataset.themeMode || readStoredTheme(),
+          media,
+          syncGiscusTheme: () => syncGiscusTheme(root.dataset.themeResolved || resolveTheme(readStoredTheme())),
+        };
+
+        applyTheme(readStoredTheme(), false);
+      })();
+    </script><link rel="stylesheet" href="/_astro/about-me.CbNzs0iT.css"></head> <body> <header class="site-header"> <div class="layout-shell site-header__row"> <a class="site-brand" href="/">Carson Ye</a> <nav class="site-nav" aria-label="Primary"> <ul class="site-nav__list"> <li class="site-nav__item"> <a class="site-nav__link" href="/"> Home </a> </li><li class="site-nav__item"> <a class="site-nav__link site-nav__link--active" href="/articles" aria-current="page"> Articles </a> </li><li class="site-nav__item"> <a class="site-nav__link" href="/topics"> Topics </a> </li><li class="site-nav__item"> <a class="site-nav__link" href="https://lab.carsonye.com/"> Lab </a> </li><li class="site-nav__item"> <a class="site-nav__link" href="/about-me"> About </a> </li> </ul> </nav> <div class="site-header__actions"> <a href="/search" class="icon-button" aria-label="Search articles"> <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> <button type="button" class="icon-button theme-toggle" data-theme-toggle aria-label="Toggle theme"> <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle> <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> <svg class="theme-toggle__icon theme-toggle__icon--system" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"></rect> <path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> <button type="button" class="icon-button mobile-nav-toggle" data-mobile-toggle aria-expanded="false" aria-label="Toggle menu"> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--menu" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> <svg class="mobile-nav-toggle__icon mobile-nav-toggle__icon--close" viewBox="0 0 24 24" fill="none" aria-hidden="true"> <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path> </svg> </button> </div> </div> <nav class="mobile-nav layout-shell" data-mobile-nav hidden aria-label="Mobile"> <ul class="mobile-nav__list"> <li class="mobile-nav__item"> <a class="mobile-nav__link" href="/"> Home </a> </li><li class="mobile-nav__item"> <a class="mobile-nav__link mobile-nav__link--active" href="/articles" aria-current="page"> Articles </a> </li><li class="mobile-nav__item"> <a class="mobile-nav__link" href="/topics"> Topics </a> </li><li class="mobile-nav__item"> <a class="mobile-nav__link" href="https://lab.carsonye.com/"> Lab </a> </li><li class="mobile-nav__item"> <a class="mobile-nav__link" href="/about-me"> About </a> </li> </ul> </nav> </header> <main class="site-main layout-shell">  <div class="article-layout"> <aside class="article-outline" aria-label="Article outline"> <div class="article-outline__panel"> <p class="article-outline__title">Outline</p> <ol class="article-outline__list"> <li class="article-outline__item"> <a href="#background" class="article-outline__link" style="--outline-depth:0;" title="Background"> Background </a> </li><li class="article-outline__item"> <a href="#goal" class="article-outline__link" style="--outline-depth:0;" title="Goal"> Goal </a> </li><li class="article-outline__item"> <a href="#high-level-architecture" class="article-outline__link" style="--outline-depth:0;" title="High-Level Architecture"> High-Level Architecture </a> </li><li class="article-outline__item"> <a href="#why-lora" class="article-outline__link" style="--outline-depth:0;" title="Why LoRA"> Why LoRA </a> </li><li class="article-outline__item"> <a href="#evaluation" class="article-outline__link" style="--outline-depth:0;" title="Evaluation"> Evaluation </a> </li><li class="article-outline__item"> <a href="#what-worked-well" class="article-outline__link" style="--outline-depth:0;" title="What Worked Well"> What Worked Well </a> </li><li class="article-outline__item"> <a href="#problems-and-lessons-learned" class="article-outline__link" style="--outline-depth:0;" title="Problems and Lessons Learned"> Problems and Lessons Learned </a> </li><li class="article-outline__item"> <a href="#final-thoughts" class="article-outline__link" style="--outline-depth:0;" title="Final Thoughts"> Final Thoughts </a> </li> </ol> </div> </aside> <div class="article-layout__main"> <article class="article-detail"> <nav class="breadcrumbs" aria-label="Breadcrumb"><ol class="breadcrumbs__list"><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/articles">Articles</a></li><li class="breadcrumbs__item"><span class="breadcrumbs__current" aria-current="page">Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA</span></li></ol></nav><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://carsonye.com/articles"},{"@type":"ListItem","position":2,"name":"Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA","item":"https://carsonye.com/articles/how-to-train-lora/"}]}</script> <header class="article-detail__header"> <h1>Building a Personalized Portrait Generator with Stable Diffusion, IP-Adapter, and LoRA</h1> <p class="meta">Published June 25, 2025</p>  <ul class="tag-list" aria-label="Tags"> <li class="tag-list__item"><a class="tag-list__link" href="/tags/lora/">#lora</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/stable-diffusion/">#stable diffusion</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/ip-adapter/">#ip-adapter</a></li><li class="tag-list__item"><a class="tag-list__link" href="/tags/image-generation/">#Image Generation</a></li> </ul> </header> <div class="article-detail__body"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">node: v</span><span style="color:#79B8FF">12.16</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">2</span></span>
+<span class="line"><span style="color:#E1E4E8">Python: </span><span style="color:#79B8FF">3.12</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">13</span></span>
+<span class="line"><span style="color:#E1E4E8">PyTorch: </span><span style="color:#79B8FF">2.6</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">0</span></span>
+<span class="line"><span style="color:#E1E4E8">Diffusers: </span><span style="color:#79B8FF">0.32</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">2</span></span>
+<span class="line"><span style="color:#E1E4E8">Transformers: </span><span style="color:#79B8FF">4.49</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">0</span></span>
+<span class="line"><span style="color:#E1E4E8">Gradio: </span><span style="color:#79B8FF">5.22</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">0</span></span></code></pre>
+<h2 id="background">Background</h2>
+<p>At first, my motivation was very practical. I wanted to generate a clean professional headshot or portrait that I could use as a profile picture. Going to a photo studio would be expensive for me, especially for something I mainly wanted to use online. I also looked at some existing AI headshot generation services, but after comparing the available options, many of them were still not cheap enough for the kind of experiment I wanted to run.</p>
+<p>The goal of the final product was not just to generate a random good-looking portrait. The generated image still needed to look like the original person. At the same time, I wanted the system to support two useful visual directions: a professional style for profile pictures, resumes, or LinkedIn-like use cases, and a casual style for more relaxed personal profiles, which maked a problem of identity preservation and controllable style generation.</p>
+<h2 id="goal">Goal</h2>
+<p>The project is a local Gradio application for personalized portrait generation. A user uploads a selfie, chooses a style, and receives a generated 512x512 portrait.</p>
+<p>The intended model stack has three layers:</p>
+<ol>
+<li>Stable Diffusion / Realistic Vision as the base image generator.</li>
+<li>IP-Adapter-FaceID with InsightFace embeddings to preserve the person’s face identity.</li>
+<li>A custom LoRA adapter trained on professional and casual portrait examples to steer the final style.</li>
+</ol>
+<p>This separation is important. Stable Diffusion is responsible for generating a realistic image. IP-Adapter-FaceID helps keep the generated face close to the uploaded selfie. LoRA provides a lightweight way to guide the final image toward a specific style without retraining the full diffusion model.</p>
+<p>In other words, the system should answer three questions at the same time:</p>
+<ul>
+<li>Does the image look realistic?</li>
+<li>Does the face still look like the input person?</li>
+<li>Does the style match the selected direction?</li>
+</ul>
+<h2 id="high-level-architecture">High-Level Architecture</h2>
+<p>The runtime flow is straightforward:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>User selfie</span></span>
+<span class="line"><span>  |</span></span>
+<span class="line"><span>  v</span></span>
+<span class="line"><span>Gradio UI</span></span>
+<span class="line"><span>  |</span></span>
+<span class="line"><span>  v</span></span>
+<span class="line"><span>InsightFace face detection and embedding</span></span>
+<span class="line"><span>  |</span></span>
+<span class="line"><span>  v</span></span>
+<span class="line"><span>IP-Adapter-FaceID</span></span>
+<span class="line"><span>  |</span></span>
+<span class="line"><span>  v</span></span>
+<span class="line"><span>Stable Diffusion pipeline + Style LoRA</span></span>
+<span class="line"><span>  |</span></span>
+<span class="line"><span>  v</span></span>
+<span class="line"><span>Generated professional or casual portrait</span></span></code></pre>
+<p>The Gradio UI stays thin. It only collects the input image, style selection, and displays the output. The model initialization and generation logic sit behind the UI.</p>
+<p>For face identity, the uploaded image is processed with InsightFace. The app detects the face, extracts a normalized face embedding, and passes that embedding into IP-Adapter-FaceID. This gives the generation pipeline a stronger identity signal than prompt text alone.</p>
+<p>For style control, the app uses prompt wording plus a trained LoRA. The base prompt describes a realistic portrait with natural lighting, sharp focus, and realistic skin texture. Then the app appends either a professional-style prompt or a casual-style prompt.</p>
+<h2 id="why-lora">Why LoRA</h2>
+<p>LoRA was a practical fit for this project because it allowed me to train a small style adapter instead of fine-tuning the full Stable Diffusion model.</p>
+<p>The dataset format was intentionally simple:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">[</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#79B8FF">    "file_path"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"dataset/example.jpg"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "label"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">]</span></span></code></pre>
+<p>In this project, <code>label: 1</code> represents professional style, and <code>label: 0</code> represents casual style. The dataset contained 709 records, with 332 professional examples and 377 casual examples. This was balanced enough for a small prototype and easy to inspect manually.</p>
+<p>During training, the base model, VAE, text encoder, and original UNet weights stay frozen. LoRA adapters are attached to the UNet attention projection layers, and only those adapter weights are trained. Images are encoded into latent space, random diffusion noise is added, and the UNet learns to predict the noise under a style-specific prompt.</p>
+<p>For example, professional images are paired with a prompt like:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>portrait photo of a person with professional attire, &#x3C;s1></span></span></code></pre>
+<p>Casual images are paired with:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>portrait photo of a person with t-shirt, &#x3C;s2></span></span></code></pre>
+<p>The training objective is the standard diffusion noise-prediction MSE loss. The final result is a small LoRA weight file that can be loaded into the generation pipeline when needed.</p>
+<p>This is what makes LoRA useful here: the base model remains general, while the LoRA acts like a lightweight style layer that can be loaded, swapped, or adjusted separately.</p>
+<h2 id="evaluation">Evaluation</h2>
+<p>The evaluation script focuses mainly on identity preservation. It uses the same general runtime stack: Stable Diffusion, IP-Adapter-FaceID, InsightFace, and the trained LoRA.</p>
+<p>The flow is:</p>
+<ol>
+<li>Select a subject image.</li>
+<li>Extract the input face embedding.</li>
+<li>Generate one professional image and one casual image.</li>
+<li>Run face detection again on the generated images.</li>
+<li>Compare the input and generated face embeddings using cosine similarity.</li>
+</ol>
+<p>This gives a rough measurement of whether the generated portrait still resembles the input person. It does not fully measure style quality. For that, visual inspection is still necessary.</p>
+<p>A strong style LoRA can look good numerically but still create unwanted artifacts, overfit to training poses, or weaken identity preservation. For this kind of project, validation loss is useful, but generated samples matter more.</p>
+<h2 id="what-worked-well">What Worked Well</h2>
+<p>The strongest part of the project is the conceptual split.</p>
+<p>Identity, style, and generation are handled by different components. That makes the system easier to debug. If the face no longer looks like the input person, the issue is likely around face detection, embedding extraction, or IP-Adapter settings. If the style is weak, the issue is likely around the LoRA, dataset quality, prompt design, or training parameters. If the image quality is poor, the base model, scheduler, inference steps, or negative prompt may need adjustment.</p>
+<p>Another good decision was using existing libraries instead of building everything from scratch. Diffusers handles the Stable Diffusion pipeline and LoRA loading. InsightFace handles face embeddings. Gradio makes the prototype easy to run locally. This kept the project focused on system integration and experimentation instead of low-level model implementation.</p>
+<h2 id="problems-and-lessons-learned">Problems and Lessons Learned</h2>
+<p>The biggest weakness was operational consistency. The code architecture was mostly in place, but the runtime depended on several local model artifacts. Some expected paths did not match the downloader script, and some model files were missing from the checkout. That means the app could not run end-to-end unless the correct model assets were restored manually.</p>
+<p>There were also duplicated app variants and experimental files. This is common in fast-moving prototypes because the project evolves quickly, but it makes the final repo harder to understand. A cleaner version should keep one canonical app entry point and move shared logic into modules such as <code>config.py</code>, <code>face.py</code>, <code>generation.py</code>, and <code>models_runtime.py</code>.</p>
+<p>Another issue was configuration. Model paths, inference steps, image size, guidance scale, and LoRA paths were hard-coded in Python files. That is acceptable for a local prototype, but a more maintainable version should use a small config layer or environment variables.</p>
+<p>Finally, the style control was binary: professional or casual. A future version could expose a continuous slider, blending the two styles with different weights. However, that should be validated visually because prompt weighting and LoRA scaling do not always behave linearly.</p>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>The final architecture shows how different AI components can work together: Stable Diffusion generates the image, IP-Adapter-FaceID preserves identity, and LoRA adds controllable style. Each part has a clear responsibility, which makes the system easier to understand and improve.</p>
+<p>The most important lesson is that a good ML prototype needs both model-side thinking and engineering-side discipline. Training the LoRA is only one part of the project. The app also needs consistent model paths, clean configuration, a reliable evaluation script, and a clear separation between active code and experiments.</p>
+<p>As a prototype, this project already has a solid foundation. With better asset management, a cleaner runtime structure, and more systematic visual evaluation, it could become a stronger local personalized portrait generation tool.</p> </div> </article>  <section aria-label="Comments" class="comments"> <h2 class="comments__title">Comments</h2>  <div class="giscus"></div> <script>(() => {
+            const attributes = {"data-repo":"Whynotmetoo/whynotmetoo.github.io","data-repo-id":"R_kgDOROUm4Q","data-category":"Announcements","data-category-id":"DIC_kwDOROUm4c4C2Qoo","data-mapping":"pathname","data-strict":"0","data-reactions-enabled":"1","data-emit-metadata":"0","data-input-position":"bottom","data-lang":"en"};
+            const themes = {"light":"light","dark":"transparent_dark"};
+            const resolvedTheme = document.documentElement.dataset.themeResolved === 'dark' ? 'dark' : 'light';
+            const theme = themes[resolvedTheme] ?? themes.light;
+            const script = document.createElement('script');
+
+            script.src = 'https://giscus.app/client.js';
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+
+            for (const [name, value] of Object.entries({ ...attributes, 'data-theme': theme })) {
+              script.setAttribute(name, value);
+            }
+
+            document.currentScript?.after(script);
+          })();</script>  </section> </div> </div>  </main> <footer class="site-footer" id="about"> <div class="layout-shell site-footer__grid"> <section class="site-footer__brand"> <a class="site-brand" href="/">Carson Ye</a> <p> I build reliable web systems and write about architecture, product trade-offs, and engineering practice. I enjoy sharing practical engineering lessons from building real products.
+</p> <ul class="site-footer__socials"> <li> <a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer" aria-label="GitHub"> <svg viewBox="0 0 24 24" fill="none"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> <li> <a href="https://x.com/_carsonye_" target="_blank" rel="noopener noreferrer" aria-label="X"> <svg viewBox="0 0 24 24" fill="currentColor"> <path d="M18.9 2.8h3.4l-7.5 8.6 8.8 11.7h-6.9l-5.4-7.1-6.2 7.1H1.7l8-9.2L1.2 2.8h7.1l4.9 6.5 5.7-6.5Zm-1.2 18.2h1.9L7.3 4.7h-2l12.4 16.3Z"></path> </svg> </a> </li> <li> <a href="mailto:hi@carsonye.com" aria-label="Email"> <svg viewBox="0 0 24 24" fill="none"> <path d="M4 6h16v12H4zM4 6l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </a> </li> </ul> </section> <section> <h2>Navigate</h2> <ul class="site-footer__links"> <li><a href="/">Home</a></li><li><a href="/articles">Articles</a></li><li><a href="/topics">Topics</a></li><li><a href="https://lab.carsonye.com/">Lab</a></li><li><a href="/about-me">About</a></li> </ul> </section> <section> <h2>Connect</h2> <ul class="site-footer__links"> <li><a href="/about-me">Contact</a></li> <li><a href="https://github.com/Whynotmetoo" target="_blank" rel="noopener noreferrer">GitHub</a></li> <li><a href="https://x.com/_carsonye_" target="_blank" rel="noopener noreferrer">X</a></li> </ul> </section> </div> <div class="layout-shell site-footer__bottom"> <p>© 2026 Carson Ye. Built with passion and curiosity.</p> </div> </footer> <script>
+      (() => {
+        const toggle = document.querySelector('[data-theme-toggle]');
+        const menuToggle = document.querySelector('[data-mobile-toggle]');
+        const mobileNav = document.querySelector('[data-mobile-nav]');
+        const themeController = window.themeController;
+        const closeMobileNav = () => {
+          if (!mobileNav || !(menuToggle instanceof HTMLButtonElement)) return;
+          mobileNav.setAttribute('hidden', '');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        };
+        const isMobileNavOpen = () =>
+          mobileNav instanceof HTMLElement &&
+          menuToggle instanceof HTMLButtonElement &&
+          !mobileNav.hasAttribute('hidden') &&
+          menuToggle.getAttribute('aria-expanded') === 'true';
+        const syncSystemTheme = () => {
+          if (themeController?.getThemeMode() === 'system') {
+            themeController.applyTheme('system', false);
+          }
+        };
+
+        themeController?.media.addEventListener?.('change', syncSystemTheme);
+        themeController?.media.addListener?.(syncSystemTheme);
+
+        if (themeController) {
+          const syncLoadedGiscus = () => themeController.syncGiscusTheme();
+          const giscusObserver = new MutationObserver(() => {
+            if (syncLoadedGiscus()) {
+              giscusObserver.disconnect();
+            }
+          });
+
+          if (!syncLoadedGiscus()) {
+            giscusObserver.observe(document.body, { childList: true, subtree: true });
+          }
+        }
+
+        toggle?.addEventListener('click', () => {
+          if (!themeController) return;
+          themeController.applyTheme(themeController.cycleTheme());
+        });
+
+        menuToggle?.addEventListener('click', () => {
+          if (!mobileNav || !(menuToggle instanceof HTMLButtonElement)) return;
+          const hidden = mobileNav.hasAttribute('hidden');
+          if (hidden) {
+            mobileNav.removeAttribute('hidden');
+            menuToggle.setAttribute('aria-expanded', 'true');
+          } else {
+            closeMobileNav();
+          }
+        });
+
+        document.addEventListener('pointerdown', (event) => {
+          if (!isMobileNavOpen()) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (mobileNav?.contains(target) || menuToggle?.contains(target)) return;
+          closeMobileNav();
+        });
+
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (isMobileNavOpen()) {
+              closeMobileNav();
+            }
+          },
+          { passive: true },
+        );
+
+        window.addEventListener(
+          'touchmove',
+          () => {
+            if (isMobileNavOpen()) {
+              closeMobileNav();
+            }
+          },
+          { passive: true },
+        );
+
+        mobileNav?.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            closeMobileNav();
+          });
+        });
+      })();
+    </script> </body> </html>
